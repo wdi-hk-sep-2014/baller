@@ -4,11 +4,19 @@ var main = {
     // That's where we load the game's assets
   game.load.image('ball', 'assets/ball.svg')
     //load ball.svg
+  game.stage.backgroundColor = '#FFFFFF'
+
   },
 
   create: function() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+  var ball = game.add.sprite(250, 250, 'ball');
+  game.physics.enable(ball, Phaser.Physics.ARCADE);
+  ball.body.velocity.setTo(300,200);
+  ball.body.collideWorldBounds = true;
+  ball.body.bounce.set(1);
 
-  ball = game.add.sprite(250, 250, 'ball');
+
 
   },
 
