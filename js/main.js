@@ -6,8 +6,8 @@ centery = windowy / 2;
 var lastTime = new Date().getTime();
 
 window.ondevicemotion = function(e) {
-  ax = e.accelerationIncludingGravity.x * 90; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -90; //acceleration along y axis
+  ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -300; //acceleration along y axis
   vx = vx + ax;
   vy = vy + ay;
   var now = new Date().getTime();
@@ -19,26 +19,27 @@ var main = {
   preload: function() {
     // This function will be executed at the beginning
     // That's where we load the game's assets
-  game.load.image('ball', 'assets/ball.svg')
+  game.load.image('ball', 'assets/ball.svg');
     //load ball.svg
-  game.stage.backgroundColor = '#FFFFFF'
+  game.stage.backgroundColor = '#FFFFFF';
 
   },
 
 
   create: function() {
+
   game.physics.startSystem(Phaser.Physics.ARCADE);
-  ball = game.add.sprite(centerx, centery, 'ball');
-  game.physics.enable(ball, Phaser.Physics.ARCADE);
-  ball.body.collideWorldBounds = true;
-  ball.body.bounce.set(1);
+  playerBall = game.add.sprite(centerx, centery, 'ball');
+  game.physics.enable(playerBall, Phaser.Physics.ARCADE);
+  playerBall.body.collideWorldBounds = true;
+  playerBall.body.bounce.set(0.8);
 
   },
 
   update: function() {
     // This function is called 60 times per second
     // It contains the game's logic
-    ball.body.acceleration.setTo(ax,ay)
+    playerBall.body.acceleration.setTo(ax,ay);
   }
 
 };
