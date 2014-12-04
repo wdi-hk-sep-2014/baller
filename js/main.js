@@ -3,14 +3,17 @@ vx = 0, vy = 0, windowx = window.innerWidth,
 windowy = window.innerHeight, centerx = windowx / 2,
 centery = windowy / 2;
 
-setInterval( function() {
+var lastTime = new Date().getTime();
+
 window.ondevicemotion = function(e) {
-  ax = event.accelerationIncludingGravity.x * 10; //acceleration along x axis
-  ay = event.accelerationIncludingGravity.y * -10; //acceleration along y axis
+  ax = e.accelerationIncludingGravity.x * 90; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -90; //acceleration along y axis
   vx = vx + ax;
   vy = vy + ay;
-  };
-}, 15);
+  var now = new Date().getTime();
+  document.getElementById('info').innerHTML = 1000 / (now - lastTime);
+  lastTime = now;
+};
 
 var main = {
   preload: function() {
@@ -35,14 +38,8 @@ var main = {
   update: function() {
     // This function is called 60 times per second
     // It contains the game's logic
-    ball.body.velocity.setTo(vx,vy)
-  },
-
-  render: function() {
-     //debug helper
-    game.debug.spriteInfo(ball,32,32);
-
-  },
+    ball.body.acceleration.setTo(ax,ay)
+  }
 
 };
 
