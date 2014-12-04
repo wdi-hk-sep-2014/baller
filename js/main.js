@@ -19,8 +19,7 @@ var main = {
   preload: function() {
     // This function will be executed at the beginning
     // That's where we load the game's assets
-  game.load.image('ball', 'assets/ball.svg');
-    //load ball.svg
+  game.load.image('ball', 'assets/ball.png', 400, 400);
   game.stage.backgroundColor = '#FFFFFF';
 
   },
@@ -29,10 +28,23 @@ var main = {
   create: function() {
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
+
+  //this is the player ball
   playerBall = game.add.sprite(centerx, centery, 'ball');
   game.physics.enable(playerBall, Phaser.Physics.ARCADE);
   playerBall.body.collideWorldBounds = true;
+  playerBall.body.checkCollision = true;
   playerBall.body.bounce.set(0.8);
+  playerBall.scale.setTo(0.5,0.5);
+
+  //adding an enemy ball to test collision
+  enemyBall = game.add.sprite(centerx, centery / 2, 'ball');
+  game.physics.enable(enemyBall, Phaser.Physics.ARCADE);
+  enemyBall.scale.setTo(0.2,0.2);
+  enemyBall.body.checkCollision = true;
+  enemyBall.body.bounce.set(1,1);
+  enemyBall.body.immovable = true;
+
 
   },
 
@@ -40,6 +52,7 @@ var main = {
     // This function is called 60 times per second
     // It contains the game's logic
     playerBall.body.acceleration.setTo(ax,ay);
+    game.physics.arcade.collide(playerBall, enemyBall);
   }
 
 };
