@@ -9,7 +9,7 @@ window.ondevicemotion = function(e) {
   ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
   ay = e.accelerationIncludingGravity.y * -300; //acceleration along y axis
 
-  //make tilt increase logarithimacally
+  //TODO: make tilt increase logarithimacally
 
   vx = vx + ax;
   vy = vy + ay;
@@ -25,6 +25,7 @@ var main = {
   preload: function() {
     // This function will be executed at the beginning
     // That's where we load the game's assets
+
     game.load.image('ball', 'assets/ball.png', 400, 400);
     game.load.image('player', 'assets/player.png', 400, 400);
     game.load.image('gameogre', 'assets/gameogre.png', 500, 256);
@@ -60,9 +61,6 @@ var main = {
       var randv = game.rnd.realInRange(-300, 300);
       var randv2 = game.rnd.realInRange(-300, 300);
       enemy.body.velocity.setTo(randv, randv2);
-      // var randsc = game.rnd.realInRange(0.01, 0.5);
-      // enemy.scale.setTo(0.02, 0.02);
-
 
     // setting up some random ball sizes
 
@@ -125,12 +123,11 @@ function eatBall (_playerBall, _enemy) {
     gameOverScreen.anchor.setTo(0.5,0.5);
   }
 
-  else
-    _enemy.kill();
+  else {
+  _enemy.kill();
   levelUp(_playerBall);
   addEnemy();
-  // game.add.tween(playerBall.scale).to( { x: 0.2, y: 0.2 }, 50, Phaser.Easing.Linear.None, true, 0, 0, true);
-
+  }
 }
 
 // Initialize Phaser, and start our 'main' state
