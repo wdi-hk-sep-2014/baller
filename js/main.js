@@ -8,6 +8,9 @@ var lastTime = new Date().getTime();
 window.ondevicemotion = function(e) {
   ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
   ay = e.accelerationIncludingGravity.y * -300; //acceleration along y axis
+
+  //make tilt increase logarithimacally
+
   vx = vx + ax;
   vy = vy + ay;
   var now = new Date().getTime();
@@ -24,6 +27,7 @@ var main = {
     // That's where we load the game's assets
     game.load.image('ball', 'assets/ball.png', 400, 400);
     game.load.image('player', 'assets/player.png', 400, 400);
+    game.load.image('gameogre', 'assets/gameogre.png', 500, 256);
     game.stage.backgroundColor = '#FFFFFF';
 
   },
@@ -32,6 +36,7 @@ var main = {
   create: function() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
+
 
     //this is the player ball
     playerBall = game.add.sprite(centerx, centery, 'player');
@@ -51,7 +56,7 @@ var main = {
 
     for (var x = 1; x < 20; x++) {
       enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
-      enemy.body.bounce.set(1.01);
+      enemy.body.bounce.set(0.9);
       var randv = game.rnd.realInRange(-500, 500);
       var randv2 = game.rnd.realInRange(-500, 500);
       enemy.body.velocity.setTo(randv, randv2);
@@ -94,11 +99,16 @@ var main = {
 
 function eatBall (_playerBall, _enemy) {
   if (_enemy.scale.x > _playerBall.scale.x) {
-    _enemy.kill();
+    _playerBall.kill();
+    gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+    gameOverScreen.scale.setTo(1,1);
+    gameOverScreen.anchor.setTo(0.5,0.5);
   }
 
+  else
+    _enemy.kill();
+    game.add.tween(playerBall.scale).to( { x: 0.2, y: 0.2 }, 50, Phaser.Easing.Linear.None, true, 0, 0, true);
 
-  // game.add.tween(playerBall.scale).to( { x: 0.2, y: 0.2 }, 50, Phaser.Easing.Linear.None, true, 0, 0, true);
 }
 
 // Initialize Phaser, and start our 'main' state
