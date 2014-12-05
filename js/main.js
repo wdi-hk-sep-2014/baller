@@ -11,7 +11,7 @@ window.ondevicemotion = function(e) {
   vx = vx + ax;
   vy = vy + ay;
   var now = new Date().getTime();
-  document.getElementById('info').innerHTML = 1000 / (now - lastTime);
+  document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this is to calculate how many times the
   lastTime = now;
 };
 
@@ -46,6 +46,7 @@ var main = {
     playerBall.body.checkCollision = true;
     playerBall.body.bounce.set(0.9);
     playerBall.scale.setTo(0.05,0.05);
+    playerBall.anchor.setTo(0.5, 0.5);
 
     //adding an enemy ball to test collision
       // enemyBall = game.add.sprite(centerx, centery / 2, 'ball');
@@ -63,12 +64,12 @@ var main = {
 
     for (var x = 0; x < 20; x++) {
       enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
-      enemy.body.bounce.set(0.95);
+      enemy.body.bounce.set(1.01);
       var randv = game.rnd.realInRange(-500, 500);
       var randv2 = game.rnd.realInRange(-500, 500);
       enemy.body.velocity.setTo(randv, randv2);
       // var randsc = game.rnd.realInRange(0.01, 0.5);
-      enemy.scale.setTo(0.02,0.02);
+      enemy.scale.setTo(0.02,0.02); // make random sizes here
       enemy.body.collideWorldBounds = true;
     }
 
@@ -87,6 +88,7 @@ var main = {
 
 function eatBall (_playerBall, _enemy) {
   _enemy.kill();
+  game.add.tween(playerBall.scale).to( { x: 0.2, y: 0.2 }, 50, Phaser.Easing.Linear.None, true, 0, 0, true);
 }
 
 // Initialize Phaser, and start our 'main' state
