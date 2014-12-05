@@ -45,7 +45,7 @@ var main = {
     playerBall.body.collideWorldBounds = true;
     playerBall.body.checkCollision = true;
     playerBall.body.bounce.set(0.9);
-    playerBall.scale.setTo(0.1,0.1);
+    playerBall.scale.setTo(0.05,0.05);
 
     //adding an enemy ball to test collision
       // enemyBall = game.add.sprite(centerx, centery / 2, 'ball');
