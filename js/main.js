@@ -11,18 +11,19 @@ window.ondevicemotion = function(e) {
   vx = vx + ax;
   vy = vy + ay;
   var now = new Date().getTime();
-  document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this is to calculate how many times the
+  // document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this line for debugging purposes
   lastTime = now;
 };
 
-var enemies, enemy, pBallSize, playerBall;
+var enemies, enemy, playerBall, pBallSize;
 
 function init() {
-
+  //code to be added here.
 }
 
 function calcPlayerSize(playerBall) {
-  pBallSize = playerBall.scale.x; // get the size of the ball
+  pBallSize = playerBall.scale.x; // get the size of the ball. To be used in future functions.
+  return pBallSize;
 }
 
 var main = {
@@ -48,13 +49,6 @@ var main = {
     playerBall.scale.setTo(0.05,0.05);
     playerBall.anchor.setTo(0.5, 0.5);
 
-    //adding an enemy ball to test collision
-      // enemyBall = game.add.sprite(centerx, centery / 2, 'ball');
-      // game.physics.enable(enemyBall, Phaser.Physics.ARCADE);
-      // enemyBall.scale.setTo(0.2,0.2);
-      // enemyBall.body.checkCollision = true;
-      // enemyBall.body.bounce.set(1,1);
-      // enemyBall.body.immovable = true;
 
     // create a bunch of randomly moving balls which bounce
 
