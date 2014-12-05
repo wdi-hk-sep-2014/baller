@@ -15,7 +15,15 @@ window.ondevicemotion = function(e) {
   lastTime = now;
 };
 
-var enemies;
+var enemies, enemy, pBallSize, playerBall;
+
+function init() {
+
+}
+
+function calcPlayerSize(playerBall) {
+  pBallSize = playerBall.scale.x; // get the size of the ball
+}
 
 var main = {
   preload: function() {
@@ -37,7 +45,7 @@ var main = {
     playerBall.body.collideWorldBounds = true;
     playerBall.body.checkCollision = true;
     playerBall.body.bounce.set(0.9);
-    playerBall.scale.setTo(0.3,0.3);
+    playerBall.scale.setTo(0.1,0.1);
 
     //adding an enemy ball to test collision
       // enemyBall = game.add.sprite(centerx, centery / 2, 'ball');
@@ -48,19 +56,20 @@ var main = {
       // enemyBall.body.immovable = true;
 
     // create a bunch of randomly moving balls which bounce
-    var enemy;
 
     enemies = game.add.group();
     enemies.enableBody = true;
     enemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-    for (var x = 0; x < 30; x++) {
+    for (var x = 0; x < 20; x++) {
       enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
-      enemy.body.bounce.set(0.9);
-      var rand = game.rnd.realInRange(5, 50);
-      enemy.body.velocity.setTo(rand, rand);
+      enemy.body.bounce.set(0.95);
+      var randv = game.rnd.realInRange(-500, 500);
+      var randv2 = game.rnd.realInRange(-500, 500);
+      enemy.body.velocity.setTo(randv, randv2);
+      // var randsc = game.rnd.realInRange(0.01, 0.5);
+      enemy.scale.setTo(0.02,0.02);
       enemy.body.collideWorldBounds = true;
-      enemy.scale.setTo(0.1,0.1);
     }
 
 
@@ -70,11 +79,15 @@ var main = {
     // This function is called 60 times per second
     // It contains the game's logic
     playerBall.body.acceleration.setTo(ax,ay);
-    game.physics.arcade.collide(playerBall, enemies);
+    game.physics.arcade.collide(playerBall, enemies, eatBall);
     game.physics.arcade.collide(enemies, enemies);
   }
 
 };
+
+function eatBall (_playerBall, _enemy) {
+  _enemy.kill();
+}
 
 // Initialize Phaser, and start our 'main' state
 var game = new Phaser.Game(windowx, windowy, Phaser.AUTO, 'ballerDiv');
