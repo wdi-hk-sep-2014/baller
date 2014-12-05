@@ -63,13 +63,16 @@ var main = {
       // var randsc = game.rnd.realInRange(0.01, 0.5);
       // enemy.scale.setTo(0.02, 0.02);
 
+
+    // setting up some random ball sizes
+
       if (x <= 14) {
         smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
-        enemy.scale.setTo(smallerEnemy, smallerEnemy); // this makes 10 enemies smaller than the current playerBall.scale.x
+        enemy.scale.setTo(smallerEnemy, smallerEnemy); // this makes 14 enemies smaller than the current playerBall.scale.x
       }
 
       else if (x > 14 && x <= 16) {
-        enemy.scale.setTo(playerBall.scale.x, playerBall.scale.x); // this makes 3 balls with the same size as playerBall.scale.x here note: can write a function to return two values or arguments?
+        enemy.scale.setTo(playerBall.scale.x, playerBall.scale.x); // this makes 2 balls with the same size as playerBall.scale.x here note: can write a function to return two values or arguments?
       }
 
       else {
@@ -98,15 +101,25 @@ var main = {
 };
 
 function levelUp(_playerBall) {
-  var newSize = _playerBall.scale.x * 1.1;
+  var newSize = _playerBall.scale.x * 1.05;
   _playerBall.scale.x = newSize;
   _playerBall.scale.y = newSize;
+}
+
+function addEnemy() {
+  enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
+  enemy.body.bounce.set(0.9);
+  var randv = game.rnd.realInRange(-300, 300);
+  var randv2 = game.rnd.realInRange(-300, 300);
+  var randsc = game.rnd.realInRange(0.01,0.3);
+  enemy.scale.setTo(randsc,randsc);
+  enemy.body.velocity.setTo(randv, randv2);
+  enemy.body.collideWorldBounds = true;
 }
 
 function eatBall (_playerBall, _enemy) {
   if (_enemy.scale.x > _playerBall.scale.x) {
     _playerBall.kill();
-
     gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
     gameOverScreen.scale.setTo(1,1);
     gameOverScreen.anchor.setTo(0.5,0.5);
@@ -115,6 +128,7 @@ function eatBall (_playerBall, _enemy) {
   else
     _enemy.kill();
   levelUp(_playerBall);
+  addEnemy();
   // game.add.tween(playerBall.scale).to( { x: 0.2, y: 0.2 }, 50, Phaser.Easing.Linear.None, true, 0, 0, true);
 
 }
