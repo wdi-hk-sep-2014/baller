@@ -38,6 +38,10 @@ var main = {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
+    function init() {
+
+    //create an empty board
+
 
     //this is the player ball
     playerBall = game.add.sprite(centerx, centery, 'player');
@@ -81,8 +85,10 @@ var main = {
       enemy.body.collideWorldBounds = true;
 
 
-}
+      }
+    }
 
+    init();
 
 
 
@@ -91,9 +97,20 @@ var main = {
   update: function() {
     // This function is called 60 times per second
     // It contains the game's logic
+
+    if (game.input.mousePointer.isDown)
+    {
+        //  First is the callback
+        //  Second is the context in which the callback runs, in this case game.physics.arcade
+        //  Third is the parameter the callback expects - it is always sent the Group child as the first parameter
+        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 200);
+    }
+
     playerBall.body.acceleration.setTo(ax,ay);
     game.physics.arcade.collide(playerBall, enemies, eatBall);
     game.physics.arcade.collide(enemies, enemies);
+
+
   }
 
 };
