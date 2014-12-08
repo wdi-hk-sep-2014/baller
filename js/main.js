@@ -107,11 +107,11 @@ var main = {
         //  First is the callback
         //  Second is the context in which the callback runs, in this case game.physics.arcade
         //  Third is the parameter the callback expects - it is always sent the Group child as the first parameter
-        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 500);
+        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 800);
     }
 
     else if (game.input.pointer1.isDown) {
-        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 500);
+        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, 800);
     }
 
     playerBall.body.acceleration.setTo(ax,ay);
