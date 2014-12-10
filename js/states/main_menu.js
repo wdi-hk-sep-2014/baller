@@ -1,22 +1,23 @@
+function MainMenuState() {}
+
+
 MainMenuState.prototype = {
   create: function() {
-    this.enterKey = this.game.input.keyboard
-        .addKey(Phaser.Keyboard.ENTER);
 
-    this.enterKey.onDown.add(this.tweenPlayState, this);
+    var logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
+    logo.anchor.setTo(0.5,0.5);
+    logo.scale.setTo(0.55,0.55);
+
+    // debugger
+
+    var logo_animation = game.add.tween(logo);
+    logo_animation.to({ x: centerx, y: centery - 100}, 1000, Phaser.Easing.Quadratic.InOut);
+    logo_animation.start();
+
+    var logo_scale = game.add.tween(logo.scale);
+    logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut);
+    logo_scale.start();
+
   },
-  tweenPlayState: function() {
-    var tweenMenuShrink = this.game.add.tween({})
-          .to({x: 0, y: 0}, 200);
 
-    var tweenFadeIn = this.game.add.tween({})
-          .to({alpha: 1}, 2000);
-
-    tweenFadeIn.onComplete.add(function() {
-      this.game.state.start('level-master');
-    }, this);
-
-    tweenMenuShrink.chain(tweenFadeIn);
-    tweenMenuShrink.start();
-  }
 };
