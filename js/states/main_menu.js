@@ -17,7 +17,7 @@ MainMenuState.prototype = {
     logo_animation.start();
 
     var logo_scale = game.add.tween(logo.scale);
-    logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut);
+    logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut, true);
     logo_scale.start();
 
 
@@ -27,39 +27,25 @@ MainMenuState.prototype = {
     var logoPositionY = logo.position.y;
 
 
-    // creating the menu options
+    // creating the menu options, credits to mddub
 
+    var menuOptions = [
+      {name: 'single', yOffset: 120},
+      {name: 'multi', yOffset: 220},
+      {name: 'options', yOffset: 320}
+    ];
 
-    var singlePlayer = game.add.sprite(logoPositionX, logoPositionY + 120, 'single');
-    singlePlayer.anchor.setTo(0.5, 0.5);
-    singlePlayer.scale.setTo(0.3);
-    singlePlayer.alpha = 0;
+    var menuSprites = {};
 
-    var  multiPlayer = game.add.sprite(logoPositionX, logoPositionY + 220, 'multi');
-    multiPlayer.anchor.setTo(0.5, 0.5);
-    multiPlayer.scale.setTo(0.3);
-    multiPlayer.alpha = 0;
+    menuOptions.forEach(
+      function(option) {
+        var sprite = game.add.sprite(logoPositionX, logoPositionY + option.yOffset, option.name);
+        sprite.anchor.setTo(0.5, 0.5);
+        sprite.scale.setTo(0.3);
+        sprite.alpha = 0;
+        game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
 
-    var  options = game.add.sprite(logoPositionX, logoPositionY + 320, 'options');
-    options.anchor.setTo(0.5, 0.5);
-    options.scale.setTo(0.3);
-    options.alpha = 0;
-
-    var singleAnimation = game.add.tween(singlePlayer);
-    var multiAnimation = game.add.tween(multiPlayer);
-    var optionAnimation = game.add.tween(options);
-
-    singleAnimation.to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, false, 1000);
-    singleAnimation.start();
-
-    multiAnimation.to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, false, 1000);
-    multiAnimation.start();
-
-    optionAnimation.to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, false, 1000);
-    optionAnimation.start();
-
-    // todo: refactoring
-
+      });
 
 
   },
