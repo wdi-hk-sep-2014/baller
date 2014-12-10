@@ -13,7 +13,7 @@ MainMenuState.prototype = {
     logo.scale.setTo(0.55,0.55);
 
     var logo_animation = game.add.tween(logo);
-    logo_animation.to({ x: centerx, y: windowy / 3 }, 1000, Phaser.Easing.Quadratic.InOut);
+    logo_animation.to({ x: centerx, y: oneThirdHeight }, 1000, Phaser.Easing.Quadratic.InOut);
     logo_animation.start();
 
     var logo_scale = game.add.tween(logo.scale);
