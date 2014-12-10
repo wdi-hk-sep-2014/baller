@@ -72,8 +72,9 @@ for (var x = 1; x < 20; x++) {
   }
 }
 
+function LevelRoundState() {}
 
-var main = {
+LevelRoundState.prototype = {
   preload: function() {
     // This function will be executed at the beginning
     // That's where we load the game's assets
@@ -127,6 +128,11 @@ function destroySprite (sprite) {
 
 }
 
+function restartGame() {
+  game.state.start('level_round');
+  // this.game.state.start('level_round');
+}
+
 function levelUp(_playerBall) {
   var newSize = _playerBall.scale.x * 1.05;
   _playerBall.scale.x = newSize;
@@ -151,7 +157,8 @@ function eatBall (_playerBall, _enemy) {
     gameOverScreen.scale.setTo(1,1);
     gameOverScreen.anchor.setTo(0.5,0.5);
     gameOverScreen.inputEnabled = true;
-    gameOverScreen.events.onInputDown.add(destroySprite, this);
+    // gameOverScreen.events.onInputDown.add(destroySprite, this);
+    gameOverScreen.events.onInputDown.add(restartGame, this);
   }
 
   else {
