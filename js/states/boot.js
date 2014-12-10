@@ -9,14 +9,14 @@ function Boot() {}
 Boot.prototype = {
 
   preload: function() {
-    game.load.image('ballerlogo', '../assets/ballerlogo.png');
-    game.load.image('startbutton', '../assets/startbutton.png');
+    game.load.image('ballerlogo', 'assets/ballerlogo.png');
+    game.load.image('startbutton', 'assets/startbutton.png');
     game.load.image('ball', 'assets/ball.png', 400, 400);
     game.load.image('player', 'assets/player.png', 400, 400);
     game.load.image('gameogre', 'assets/gameogre.png', 500, 256);
-    game.load.image('single', '../assets/singleplayer.png');
-    game.load.image('multi', '../assets/multiplayer.png');
-    game.load.image('options', '../assets/options.png');
+    game.load.image('single', 'assets/singleplayer.png');
+    game.load.image('multi', 'assets/multiplayer.png');
+    game.load.image('options', 'assets/options.png');
     game.stage.backgroundColor = '#FFFFFF';
     //load preloader assets
   },
