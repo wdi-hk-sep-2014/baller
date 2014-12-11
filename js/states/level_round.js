@@ -8,6 +8,18 @@ function createPlayer() {
     playerBall.scale.setTo(0.1,0.1);
     game.physics.p2.enable(playerBall);
 
+    // //adding invicibility to the ball for 4 seconds
+
+    playerBall.invincible = true;
+
+    var invincibleAnimation = game.add.tween(playerBall);
+    invincibleAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 8, false).to({alpha: 1}, 500);
+
+
+    game.time.events.add(4000, (function() {
+        playerBall.invincible = false;
+    }), this);
+
     //setting the collision group for the player
     playerBall.body.setCollisionGroup(playerCollisionGroup);
     playerBall.body.collides(enemiesCollisionGroup, hitEnemy, this);
@@ -84,7 +96,11 @@ function hitEnemy(playerBall, enemy) {
     //  body2 is the body it impacted with, the enemy balls
     //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
 
-    if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
+    if (playerBall.sprite.invincible) {
+        return;
+    }
+
+    else if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
         playerBall.sprite.kill();
         gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
         gameOverScreen.scale.setTo(1,1);
@@ -133,6 +149,11 @@ LevelRoundState.prototype = {
     largerEnemies = game.add.group();
 
     createPlayer();
+
+    //adding invicibility to the ball for 4 seconds
+
+
+
 
     createSmallerEnemies();
     createLargerEnemies();
