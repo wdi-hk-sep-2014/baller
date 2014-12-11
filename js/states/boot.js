@@ -35,6 +35,7 @@ Boot.prototype = {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.input.addPointer();
+    cursors = game.input.keyboard.createCursorKeys();
   },
 
   update: function() {

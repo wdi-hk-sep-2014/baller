@@ -35,7 +35,7 @@ MainMenuState.prototype = {
       {name: 'options', yOffset: 320}
     ];
 
-    var menuSprites = {};
+    var menuSprites = {}; // to be filled with menu sprite objects
 
     menuOptions.forEach(
       function(option) {
@@ -43,11 +43,20 @@ MainMenuState.prototype = {
         sprite.anchor.setTo(0.5, 0.5);
         sprite.scale.setTo(0.3);
         sprite.alpha = 0;
+        sprite.inputEnabled = true;
         game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
-
+        menuSprites[option.name] = sprite;
       });
 
+    function singlePlayerStart() {
+      this.game.state.start('level_master');
+    }
+
+    menuSprites.single.events.onInputDown.add(singlePlayerStart, this);
+
+    // actually, make it go to levelLoader
 
   },
+
 
 };

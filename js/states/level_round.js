@@ -1,7 +1,11 @@
+function LevelRoundState() {}
+
+var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+
+//accelerometer controls
+
 var ax = 0, ay = 0,
 vx = 0, vy = 0;
-
-var lastTime = new Date().getTime();
 
 window.ondevicemotion = function(e) {
   ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
@@ -11,87 +15,158 @@ window.ondevicemotion = function(e) {
 
   vx = vx + ax;
   vy = vy + ay;
-  var now = new Date().getTime();
-  // document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this line for debugging purposes
-  lastTime = now;
+
 };
 
-var enemies, enemy, playerBall, smallerEnemy, largerEnemy, gameOverScreen;
+function createPlayer() {
+    playerBall = game.add.sprite(centerx, centery, 'player');
+    playerBall.scale.setTo(0.1,0.1);
+    game.physics.p2.enable(playerBall);
 
-function createPlayer () {
-  playerBall = game.add.sprite(centerx, centery, 'player');
-  game.physics.enable(playerBall, Phaser.Physics.ARCADE);
-  playerBall.body.collideWorldBounds = true;
-  playerBall.body.checkCollision = true;
-  playerBall.body.bounce.set(0.9);
-  playerBall.scale.setTo(0.1,0.1);
-  playerBall.anchor.setTo(0.5, 0.5);
-}
+    // //adding invicibility to the ball for 4 seconds
 
-function init() {
+    playerBall.invincible = true;
 
-//create an empty board
-
-createPlayer();
-//this is the player ball
-
-// initial game state
-
-enemies = game.add.group();
-enemies.enableBody = true;
-enemies.physicsBodyType = Phaser.Physics.ARCADE;
+    var invincibleAnimation = game.add.tween(playerBall);
+    invincibleAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false).to({alpha: 1}, 500);
 
 
-for (var x = 1; x < 20; x++) {
-  enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
-  enemy.body.bounce.set(0.9);
-  enemy.inputEnabled = true;
-  var randv = game.rnd.realInRange(-300, 300);
-  var randv2 = game.rnd.realInRange(-300, 300);
-  enemy.body.velocity.setTo(randv, randv2);
+    game.time.events.add(4000, (function() {
+        playerBall.invincible = false;
+    }), this);
 
-// setting up some random ball sizes
-
-  if (x <= 14) {
-    smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
-    enemy.scale.setTo(smallerEnemy, smallerEnemy); // this makes 14 enemies smaller than the current playerBall.scale.x
-  }
-
-  else if (x > 14 && x <= 16) {
-    enemy.scale.setTo(playerBall.scale.x, playerBall.scale.x); // this makes 2 balls with the same size as playerBall.scale.x here note: can write a function to return two values or arguments?
-  }
-
-  else {
-    largerEnemy = game.rnd.realInRange(playerBall.scale.x, 0.3);
-    enemy.scale.setTo(largerEnemy, largerEnemy);
-  }
-
-  enemy.body.collideWorldBounds = true;
-
-
-  }
+    //setting the collision group for the player
+    playerBall.body.setCollisionGroup(playerCollisionGroup);
+    playerBall.body.collides(enemiesCollisionGroup, hitEnemy, this);
 }
 
 
-var main = {
+function createSmallerEnemies() {
+    for (var x = 1; x < 15; x++) {
+        var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
+        var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
+
+
+        //making enemies smaller than current player size
+        enemy.scale.setTo(smallerEnemy, smallerEnemy);
+        game.physics.p2.enable(enemy, false);
+
+        //initiating enemy velocity.
+
+        var randv = game.rnd.realInRange(-300, 300);
+        var randv2 = game.rnd.realInRange(-300, 300);
+        enemy.body.velocity.x = randv;
+        enemy.body.velocity.y = randv2;
+
+        //setting the collision group and having it collide with the player.
+        enemy.body.setCollisionGroup(enemiesCollisionGroup);
+        enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
+    }
+}
+
+function createLargerEnemies() {
+    for (var x = 1; x < 5; x++) {
+        var enemy = largerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
+        var largerEnemy = game.rnd.realInRange(playerBall.scale.x, playerBall.scale.x * 1.5);
+        enemy.scale.setTo(largerEnemy, largerEnemy);
+        game.physics.p2.enable(enemy, false);
+
+        //setting the collision group and having it collide with the player.
+        enemy.body.setCollisionGroup(enemiesCollisionGroup);
+        enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
+
+    }
+}
+
+function moveLargerTowardPlayer (enemy) {
+    accelerateToObject(enemy, playerBall, 200);
+}
+
+function moveSmallerTowardPlayer (enemy) {
+    accelerateToObject(enemy, playerBall, 50);
+}
+
+function accelerateToObject(obj1, obj2, speed) {
+    if (typeof speed === 'undefined') { speed = 60; }
+    var angle = Math.atan2(obj2.y - obj1.y, obj2.x - obj1.x);
+    obj1.body.rotation = angle + game.math.degToRad(90);  // correct angle of angry balls (depends on the sprite used)
+    obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject
+    obj1.body.force.y = Math.sin(angle) * speed;
+}
+
+function restartGame() {
+  game.state.start('level_round');
+  // this.game.state.start('level_round');
+}
+
+
+function levelUp(playerBall) {
+  var newSize = playerBall.sprite.scale.x * 1.01;
+  playerBall.sprite.scale.x = newSize;
+  playerBall.sprite.scale.y = newSize;
+}
+
+function hitEnemy(playerBall, enemy) {
+    //  body1 is the playerBall (as it's the body that owns the callback)
+    //  body2 is the body it impacted with, the enemy balls
+    //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
+
+    if (playerBall.sprite.invincible) {
+        return;
+    }
+
+    else if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
+        playerBall.sprite.kill();
+        gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+        gameOverScreen.scale.setTo(1,1);
+        gameOverScreen.anchor.setTo(0.5,0.5);
+        gameOverScreen.inputEnabled = true;
+        gameOverScreen.events.onInputDown.add(restartGame, this);
+      }
+
+    else {
+        enemy.sprite.kill();
+        levelUp(playerBall);
+    }
+
+}
+
+LevelRoundState.prototype = {
+
   preload: function() {
     // This function will be executed at the beginning
-    // That's where we load the game's assets
-
-    game.load.image('ball', 'assets/ball.png', 400, 400);
-    game.load.image('player', 'assets/player.png', 400, 400);
-    game.load.image('gameogre', 'assets/gameogre.png', 500, 256);
-    game.stage.backgroundColor = '#FFFFFF';
 
   },
 
 
   create: function() {
 
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.input.addPointer();
+    // starting the P2JS system
+    game.physics.startSystem(Phaser.Physics.P2JS);
 
-    init();
+    // starting collision events
+    game.physics.p2.setImpactEvents(true);
+    game.physics.p2.restitution = 1.1;
+
+    //creating a collision group for player and enemies
+
+    playerCollisionGroup = game.physics.p2.createCollisionGroup();
+
+    enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
+
+    game.physics.p2.updateBoundsCollisionGroup();
+
+
+    smallerEnemies = game.add.group();
+    largerEnemies = game.add.group();
+
+    createPlayer();
+
+    //adding invicibility to the ball for 4 seconds
+
+    createSmallerEnemies();
+
+    createLargerEnemies();
 
 
   },
@@ -100,63 +175,23 @@ var main = {
     // This function is called 60 times per second
     // It contains the game's logic
 
-    if (game.input.mousePointer.isDown)
-    {
-        //  First is the callback
-        //  Second is the context in which the callback runs, in this case game.physics.arcade
-        //  Third is the parameter the callback expects - it is always sent the Group child as the first parameter
-        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, -8000);
-    }
+    //assigning force using the accelerometer
 
-    else if (game.input.pointer1.isDown) {
-        enemies.forEach(game.physics.arcade.moveToPointer, game.physics.arcade, false, -8000);
-    }
+    playerBall.body.force.x = ax;
+    playerBall.body.force.y = ay;
 
-    playerBall.body.acceleration.setTo(ax,ay);
-    game.physics.arcade.collide(playerBall, enemies, eatBall);
-    game.physics.arcade.collide(enemies, enemies);
+    //larger enemies move faster towards you.
 
+    largerEnemies.forEachAlive(moveLargerTowardPlayer, this);
+    smallerEnemies.forEachAlive(moveSmallerTowardPlayer, this);
+
+    //keyboard movement
+
+    if (cursors.left.isDown) {playerBall.body.rotateLeft(100);}   //playerBall movement
+    else if (cursors.right.isDown){playerBall.body.rotateRight(100);}
+    else {playerBall.body.setZeroRotation();}
+    if (cursors.up.isDown){playerBall.body.thrust(800);}
+    else if (cursors.down.isDown){playerBall.body.reverse(800);}
 
   }
-
 };
-
-function destroySprite (sprite) {
-
-    sprite.destroy();
-
-}
-
-function levelUp(_playerBall) {
-  var newSize = _playerBall.scale.x * 1.05;
-  _playerBall.scale.x = newSize;
-  _playerBall.scale.y = newSize;
-}
-
-function addEnemy() {
-  enemy = enemies.create(game.world.randomX, game.world.randomY, 'ball');
-  enemy.body.bounce.set(0.9);
-  var randv = game.rnd.realInRange(-300, 300);
-  var randv2 = game.rnd.realInRange(-300, 300);
-  var randsc = game.rnd.realInRange(0.01,0.3);
-  enemy.scale.setTo(randsc,randsc);
-  enemy.body.velocity.setTo(randv, randv2);
-  enemy.body.collideWorldBounds = true;
-}
-
-function eatBall (_playerBall, _enemy) {
-  if (_enemy.scale.x > _playerBall.scale.x) {
-    _playerBall.kill();
-    gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
-    gameOverScreen.scale.setTo(1,1);
-    gameOverScreen.anchor.setTo(0.5,0.5);
-    gameOverScreen.inputEnabled = true;
-    gameOverScreen.events.onInputDown.add(destroySprite, this);
-  }
-
-  else {
-  _enemy.kill();
-  levelUp(_playerBall);
-  addEnemy();
-  }
-}
