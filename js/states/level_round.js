@@ -74,7 +74,7 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.05;
+  var newSize = playerBall.sprite.scale.x * 1.01;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
 }
