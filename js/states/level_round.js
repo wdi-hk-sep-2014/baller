@@ -1,26 +1,39 @@
 function LevelRoundState() {}
 
-var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies;
-
-
+var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
 
 function createPlayer() {
     playerBall = game.add.sprite(centerx, centery, 'player');
     playerBall.scale.setTo(0.1,0.1);
     game.physics.p2.enable(playerBall);
+
+    //setting the collision group for the player
+    playerBall.body.setCollisionGroup(playerCollisionGroup);
+    playerBall.body.collides(enemiesCollisionGroup, hitEnemy, this);
 }
+
 
 function createSmallerEnemies() {
     for (var x = 1; x < 15; x++) {
         var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
         var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
-        enemy.scale.setTo(smallerEnemy, smallerEnemy); // this makes 14 enemies smaller than the current playerBall.scale.x
+
+
+        //making enemies smaller than current player size
+        enemy.scale.setTo(smallerEnemy, smallerEnemy);
         game.physics.p2.enable(enemy, false);
+
+        //initiating enemy velocity.
+
         var randv = game.rnd.realInRange(-300, 300);
         var randv2 = game.rnd.realInRange(-300, 300);
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
+
+        //setting the collision group and having it collide with the player.
+        enemy.body.setCollisionGroup(enemiesCollisionGroup);
+        enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
     }
 }
 
@@ -28,8 +41,13 @@ function createLargerEnemies() {
     for (var x = 1; x < 5; x++) {
         var enemy = largerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
         var largerEnemy = game.rnd.realInRange(playerBall.scale.x, playerBall.scale.x * 1.5);
-        enemy.scale.setTo(largerEnemy, largerEnemy); // this makes 14 enemies smaller than the current playerBall.scale.x
+        enemy.scale.setTo(largerEnemy, largerEnemy);
         game.physics.p2.enable(enemy, false);
+
+        //setting the collision group and having it collide with the player.
+        enemy.body.setCollisionGroup(enemiesCollisionGroup);
+        enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
+
     }
 }
 
@@ -49,6 +67,14 @@ function accelerateToObject(obj1, obj2, speed) {
     obj1.body.force.y = Math.sin(angle) * speed;
 }
 
+function hitEnemy(body1, body2) {
+        //  body1 is the playerBall (as it's the body that owns the callback)
+        //  body2 is the body it impacted with, the enemy balls
+        //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
+
+        body2.sprite.kill();
+    }
+
 LevelRoundState.prototype = {
 
   preload: function() {
@@ -59,35 +85,34 @@ LevelRoundState.prototype = {
 
   create: function() {
 
-
-
-
-
+    // starting the P2JS system
     game.physics.startSystem(Phaser.Physics.P2JS);
+    // starting collision events
+    game.physics.p2.setImpactEvents(true);
+
+    game.physics.p2.restitution = 1.1;
+
+
+    //creating a collision group for player and enemies
+
+    playerCollisionGroup = game.physics.p2.createCollisionGroup();
+
+    enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
+
+    debugger
+
+    game.physics.p2.updateBoundsCollisionGroup();
+
+
+
     smallerEnemies = game.add.group();
     largerEnemies = game.add.group();
 
     createPlayer();
 
-    var playerMaterial = game.physics.p2.createMaterial('playerMaterial', playerBall.body);
-
-    var worldMaterial = game.physics.p2.createMaterial('worldMaterial');
-
-    game.physics.p2.setWorldMaterial(worldMaterial, true, true, true, true);
-
-    var contactMaterial = game.physics.p2.createContactMaterial(playerMaterial, worldMaterial);
-
-    contactMaterial.friction = 0;     // Friction to use in the contact of these two materials.
-    contactMaterial.restitution = 1.2;  // Restitution (i.e. how bouncy it is!) to use in the contact of these two materials.
-    contactMaterial.stiffness = 1e7;    // Stiffness of the resulting ContactEquation that this ContactMaterial generate.
-    contactMaterial.relaxation = 3;     // Relaxation of the resulting ContactEquation that this ContactMaterial generate.
-    contactMaterial.frictionStiffness = 1e7;    // Stiffness of the resulting FrictionEquation that this ContactMaterial generate.
-    contactMaterial.frictionRelaxation = 3;     // Relaxation of the resulting FrictionEquation that this ContactMaterial generate.
-    contactMaterial.surfaceVelocity = 0;        // Will add surface velocity to this material. If bodyA rests on top if bodyB, and the surface velocity is positive, bodyA will slide to the right.
-
-
     createSmallerEnemies();
     createLargerEnemies();
+
 
 
 
