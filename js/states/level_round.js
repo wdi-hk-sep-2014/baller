@@ -1,19 +1,11 @@
-
-
-
-
-
 function LevelRoundState() {}
 
 var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
-
 
 //accelerometer controls
 
 var ax = 0, ay = 0,
 vx = 0, vy = 0;
-
-// var lastTime = new Date().getTime();
 
 window.ondevicemotion = function(e) {
   ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
@@ -24,13 +16,7 @@ window.ondevicemotion = function(e) {
   vx = vx + ax;
   vy = vy + ay;
 
-  // var now = new Date().getTime();
-  // document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this line for debugging purposes
-  // lastTime = now;
-
 };
-
-
 
 function createPlayer() {
     playerBall = game.add.sprite(centerx, centery, 'player');
@@ -157,11 +143,10 @@ LevelRoundState.prototype = {
 
     // starting the P2JS system
     game.physics.startSystem(Phaser.Physics.P2JS);
+
     // starting collision events
     game.physics.p2.setImpactEvents(true);
-
     game.physics.p2.restitution = 1.1;
-
 
     //creating a collision group for player and enemies
 
@@ -169,9 +154,7 @@ LevelRoundState.prototype = {
 
     enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
 
-
     game.physics.p2.updateBoundsCollisionGroup();
-
 
 
     smallerEnemies = game.add.group();
@@ -181,14 +164,9 @@ LevelRoundState.prototype = {
 
     //adding invicibility to the ball for 4 seconds
 
-
-
-
     createSmallerEnemies();
+
     createLargerEnemies();
-
-
-
 
 
   },
