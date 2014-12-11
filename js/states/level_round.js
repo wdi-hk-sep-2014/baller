@@ -1,6 +1,35 @@
+
+
+
+
+
 function LevelRoundState() {}
 
 var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+
+
+//accelerometer controls
+
+var ax = 0, ay = 0,
+vx = 0, vy = 0;
+
+// var lastTime = new Date().getTime();
+
+window.ondevicemotion = function(e) {
+  ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -300; //acceleration along y axis
+
+  //TODO: make tilt increase logarithimacally
+
+  vx = vx + ax;
+  vy = vy + ay;
+
+  // var now = new Date().getTime();
+  // document.getElementById('info').innerHTML = 1000 / (now - lastTime); // this line for debugging purposes
+  // lastTime = now;
+
+};
+
 
 
 function createPlayer() {
@@ -13,7 +42,7 @@ function createPlayer() {
     playerBall.invincible = true;
 
     var invincibleAnimation = game.add.tween(playerBall);
-    invincibleAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 8, false).to({alpha: 1}, 500);
+    invincibleAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false).to({alpha: 1}, 500);
 
 
     game.time.events.add(4000, (function() {
@@ -167,7 +196,15 @@ LevelRoundState.prototype = {
   update: function() {
     // This function is called 60 times per second
     // It contains the game's logic
-    largerEnemies.forEachAlive(moveLargerTowardPlayer, this); // make balls accelerate towards player
+
+    //assigning force using the accelerometer
+
+    playerBall.body.force.x = ax;
+    playerBall.body.force.y = ay;
+
+    //larger enemies move faster towards you.
+
+    largerEnemies.forEachAlive(moveLargerTowardPlayer, this);
     smallerEnemies.forEachAlive(moveSmallerTowardPlayer, this);
 
     //keyboard movement
@@ -179,5 +216,4 @@ LevelRoundState.prototype = {
     else if (cursors.down.isDown){playerBall.body.reverse(800);}
 
   }
-
 };
