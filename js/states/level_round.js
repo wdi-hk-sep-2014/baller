@@ -62,18 +62,43 @@ function moveSmallerTowardPlayer (enemy) {
 function accelerateToObject(obj1, obj2, speed) {
     if (typeof speed === 'undefined') { speed = 60; }
     var angle = Math.atan2(obj2.y - obj1.y, obj2.x - obj1.x);
-    obj1.body.rotation = angle + game.math.degToRad(90);  // correct angle of angry bullets (depends on the sprite used)
+    obj1.body.rotation = angle + game.math.degToRad(90);  // correct angle of angry balls (depends on the sprite used)
     obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject
     obj1.body.force.y = Math.sin(angle) * speed;
 }
 
-function hitEnemy(body1, body2) {
-        //  body1 is the playerBall (as it's the body that owns the callback)
-        //  body2 is the body it impacted with, the enemy balls
-        //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
+function restartGame() {
+  game.state.start('level_round');
+  // this.game.state.start('level_round');
+}
 
-        body2.sprite.kill();
+
+function levelUp(playerBall) {
+  var newSize = playerBall.sprite.scale.x * 1.05;
+  playerBall.sprite.scale.x = newSize;
+  playerBall.sprite.scale.y = newSize;
+}
+
+function hitEnemy(playerBall, enemy) {
+    //  body1 is the playerBall (as it's the body that owns the callback)
+    //  body2 is the body it impacted with, the enemy balls
+    //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
+
+    if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
+        playerBall.sprite.kill();
+        gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+        gameOverScreen.scale.setTo(1,1);
+        gameOverScreen.anchor.setTo(0.5,0.5);
+        gameOverScreen.inputEnabled = true;
+        gameOverScreen.events.onInputDown.add(restartGame, this);
+      }
+
+    else {
+        enemy.sprite.kill();
+        levelUp(playerBall);
     }
+
+}
 
 LevelRoundState.prototype = {
 
@@ -99,7 +124,6 @@ LevelRoundState.prototype = {
 
     enemiesCollisionGroup = game.physics.p2.createCollisionGroup();
 
-    debugger
 
     game.physics.p2.updateBoundsCollisionGroup();
 
