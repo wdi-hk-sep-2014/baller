@@ -24,6 +24,15 @@ Preload.prototype = {
     startgame.anchor.setTo(0.5,0.5);
     startgame.scale.setTo(0.65,0.65);
 
+  },
 
+  update: function() {
+    if (game.input.mousePointer.isDown)
+    { this.game.state.start('main_menu');
+    }
+
+    else if (game.input.pointer1.isDown) {
+      this.game.state.start('main_menu');
+    }
   }
 };
