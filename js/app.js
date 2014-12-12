@@ -1,4 +1,5 @@
-function Game() {}
+function Game() {
+}
 
 Game.prototype = {
   start: function() {
@@ -8,5 +9,6 @@ Game.prototype = {
     game.state.add('level_master', LevelMasterState);
     game.state.add('level_round', LevelRoundState);
     game.state.start('boot');
+
   }
 };

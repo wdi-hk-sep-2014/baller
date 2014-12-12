@@ -42,7 +42,7 @@ function createPlayer() {
 
 
 function createSmallerEnemies() {
-    for (var x = 1; x < 15; x++) {
+    for (var x = 1; x < 18; x++) {
         var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
         var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
 
@@ -65,11 +65,18 @@ function createSmallerEnemies() {
 }
 
 function createLargerEnemies() {
-    for (var x = 1; x < 5; x++) {
+    for (var x = 1; x < 4; x++) {
         var enemy = largerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
         var largerEnemy = game.rnd.realInRange(playerBall.scale.x, playerBall.scale.x * 1.5);
         enemy.scale.setTo(largerEnemy, largerEnemy);
         game.physics.p2.enable(enemy, false);
+
+         //initiating enemy velocity.
+
+        var randv = game.rnd.realInRange(-300, 300);
+        var randv2 = game.rnd.realInRange(-300, 300);
+        enemy.body.velocity.x = randv;
+        enemy.body.velocity.y = randv2;
 
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
@@ -79,7 +86,7 @@ function createLargerEnemies() {
 }
 
 function moveLargerTowardPlayer (enemy) {
-    accelerateToObject(enemy, playerBall, 200);
+    accelerateToObject(enemy, playerBall, 150);
 }
 
 function moveSmallerTowardPlayer (enemy) {
@@ -101,7 +108,7 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.01;
+  var newSize = playerBall.sprite.scale.x * 1.015;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
 }
@@ -146,7 +153,7 @@ LevelRoundState.prototype = {
 
     // starting collision events
     game.physics.p2.setImpactEvents(true);
-    game.physics.p2.restitution = 1.1;
+    game.physics.p2.restitution = 1.05;
 
     //creating a collision group for player and enemies
 

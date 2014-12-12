@@ -17,6 +17,7 @@ Boot.prototype = {
     game.load.image('single', 'assets/singleplayer.png');
     game.load.image('multi', 'assets/multiplayer.png');
     game.load.image('options', 'assets/options.png');
+    game.load.spritesheet('loading', 'assets/loading_ball.png', 300, 289);
     game.stage.backgroundColor = '#FFFFFF';
     //load preloader assets
   },
