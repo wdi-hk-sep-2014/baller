@@ -2,6 +2,9 @@ function LevelRoundState() {}
 
 var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
+var gamePlayed = false;
+var enemiesLeft = 0;
+
 //accelerometer controls
 
 var ax = 0, ay = 0,
@@ -29,6 +32,14 @@ function createPlayer() {
 
     var invincibleAnimation = game.add.tween(playerBall);
     invincibleAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false).to({alpha: 1}, 500);
+
+    if (!gamePlayed) {
+        gamePlayed = true;
+        var getReadyScreen = game.add.sprite(centerx, centery + 50, 'getready');
+        getReadyScreen.scale.setTo(0.5,0.5);
+        var getReadyAnimation = game.add.tween(getReadyScreen);
+        getReadyAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false);
+    }
 
 
     game.time.events.add(4000, (function() {
@@ -61,6 +72,8 @@ function createSmallerEnemies() {
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
+
+        enemiesLeft++;
     }
 }
 
@@ -82,6 +95,8 @@ function createLargerEnemies() {
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
 
+
+        enemiesLeft++;
     }
 }
 
@@ -104,6 +119,7 @@ function accelerateToObject(obj1, obj2, speed) {
 function restartGame() {
   game.state.start('level_round');
   // this.game.state.start('level_round');
+  enemiesLeft = 0;
 }
 
 
@@ -113,10 +129,12 @@ function levelUp(playerBall) {
   playerBall.sprite.scale.y = newSize;
 }
 
-function hitEnemy(playerBall, enemy) {
+function hitEnemy(playerBall, enemy, x) {
     //  body1 is the playerBall (as it's the body that owns the callback)
     //  body2 is the body it impacted with, the enemy balls
     //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
+
+    console.log(x);
 
     if (playerBall.sprite.invincible) {
         return;
@@ -134,6 +152,10 @@ function hitEnemy(playerBall, enemy) {
     else {
         enemy.sprite.kill();
         levelUp(playerBall);
+        if (!enemy.sprite.hasCollided) {
+            enemy.sprite.hasCollided = true;
+            enemiesLeft--;
+        }
     }
 
 }
@@ -182,6 +204,8 @@ LevelRoundState.prototype = {
     // This function is called 60 times per second
     // It contains the game's logic
 
+    // document.getElementById("info").innerHTML = enemiesLeft; //used for debugging
+
     //assigning force using the accelerometer
 
     playerBall.body.force.x = ax;
@@ -199,6 +223,13 @@ LevelRoundState.prototype = {
     else {playerBall.body.setZeroRotation();}
     if (cursors.up.isDown){playerBall.body.thrust(800);}
     else if (cursors.down.isDown){playerBall.body.reverse(800);}
+
+    //checking for the game win condition
+
+    if (enemiesLeft === 0) {
+        var winScreen = game.add.sprite(centerx, centery, 'youwin');
+         winScreen.anchor.setTo(0.5,0.5);
+    }
 
   }
 };

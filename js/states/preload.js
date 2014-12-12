@@ -10,6 +10,8 @@ function start() {
     game.load.image('single', 'assets/singleplayer.png');
     game.load.image('multi', 'assets/multiplayer.png');
     game.load.image('options', 'assets/options.png');
+    game.load.image('getready', 'assets/get_ready.png');
+    game.load.image('youwin', 'assets/you_win.png');
     game.load.start();
 
 }
