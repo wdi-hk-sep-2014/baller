@@ -36,6 +36,9 @@ function loadComplete() {
 
     isGameLoaded = true;
 
+
+    //logo and start button to be faded in after 1 second
+
     game.time.events.add(1000, (function() {
 
         var logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
@@ -52,6 +55,7 @@ function loadComplete() {
 
     }), this);
 
+    //fade out the old loading animation
 
     game.add.tween(loadingBall).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
     game.add.tween(loadingText).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
@@ -69,6 +73,8 @@ Preload.prototype = {
     // load all game assets
     // images, spritesheets, atlases, audio etc..
 
+    //listening for load events
+
     game.load.onLoadStart.add(loadStart, this);
     game.load.onLoadComplete.add(loadComplete, this);
 
@@ -76,14 +82,6 @@ Preload.prototype = {
 
   },
   create: function() {
-    // this.game.state.start('main-intro');
-
-    //listening for load events
-
-
-    //logo and start button
-
-
 
   },
 
