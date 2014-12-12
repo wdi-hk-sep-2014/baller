@@ -8,8 +8,8 @@ var ax = 0, ay = 0,
 vx = 0, vy = 0;
 
 window.ondevicemotion = function(e) {
-  ax = e.accelerationIncludingGravity.x * 300; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -300; //acceleration along y axis
+  ax = e.accelerationIncludingGravity.x * 500; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -500; //acceleration along y axis
 
   //TODO: make tilt increase logarithimacally
 

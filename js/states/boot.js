@@ -18,21 +18,11 @@ Boot.prototype = {
   create: function() {
     //setup game environment
     //scale, input etc...
-    // this.game.state.start('preload');
 
     game.input.addPointer();
     cursors = game.input.keyboard.createCursorKeys();
 
-    var loadingBall = game.add.sprite(centerx, centery, 'loading');
-    loadingBall.anchor.setTo(0.5,0.5);
-    loadingBall.animations.add('bounce');
-    loadingBall.animations.play('bounce', 9, true);
-
-    var loadingText = game.add.sprite(centerx - 15, centery + 130, 'loading_text');
-    loadingText.scale.setTo(0.5, 0.5);
-    loadingText.anchor.setTo(0.5, 0.5);
-    loadingText.animations.add('textDotDotDot');
-    loadingText.animations.play('textDotDotDot', 2, true);
+    this.game.state.start('preload');
   },
 
   update: function() {
