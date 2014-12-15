@@ -1,6 +1,6 @@
 function LevelRoundState() {}
 
-var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var livesRemaining = 2, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
 var gamePlayed = false;
 var enemiesLeft = 0;
@@ -159,6 +159,12 @@ function hitEnemy(playerBall, enemy) {
 
 }
 
+function createLives() {
+    livesRemaining = 2;
+    playerLives = game.add.group();
+    console.log(game.width);
+}
+
 LevelRoundState.prototype = {
 
   preload: function() {
@@ -190,7 +196,7 @@ LevelRoundState.prototype = {
 
     createPlayer();
 
-    //adding invicibility to the ball for 4 seconds
+    createLives();
 
     createSmallerEnemies();
 
