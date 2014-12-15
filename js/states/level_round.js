@@ -1,7 +1,8 @@
 function LevelRoundState() {}
 
-var lives = 3, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
+var playerScale = 0.1;
 var gamePlayed = false;
 var enemiesLeft = 0;
 
@@ -24,7 +25,7 @@ window.ondevicemotion = function(e) {
 
 function createPlayer() {
     playerBall = game.add.sprite(centerx, centery, 'player');
-    playerBall.scale.setTo(0.1,0.1);
+    playerBall.scale.setTo(playerScale, playerScale);
     game.physics.p2.enable(playerBall);
 
     // //adding invicibility to the ball for 4 seconds
@@ -57,7 +58,7 @@ function createSmallerEnemies() {
     for (var x = 1; x < 18; x++) {
         var enemySpriteColors = ['blue_ball', 'red_ball', 'green_ball'];
         var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, game.rnd.pick(enemySpriteColors));
-        var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
+        var smallerEnemy = game.rnd.realInRange(0.015, playerBall.scale.x);
 
         //making enemies smaller than current player size
         enemy.scale.setTo(smallerEnemy, smallerEnemy);
@@ -125,9 +126,10 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.015;
+  var newSize = playerBall.sprite.scale.x * 1.018;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
+  playerScale = newSize;
 }
 
 function hitEnemy(playerBall, enemy) {
@@ -140,21 +142,52 @@ function hitEnemy(playerBall, enemy) {
     }
 
     else if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
-        playerBall.sprite.kill();
-        gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
-        gameOverScreen.scale.setTo(1,1);
-        gameOverScreen.anchor.setTo(0.5,0.5);
-        gameOverScreen.inputEnabled = true;
-        gameOverScreen.events.onInputDown.add(restartGame, this);
+
+
+        if (playerLives.countLiving() !== 0) {
+            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function() {
+                playerBall.sprite.kill();
+                    if (!playerBall.sprite.hasCollided) {
+                        playerBall.sprite.hasCollided = true;
+                        playerLives.next().destroy();
+                        createPlayer();
+                    }
+            }, this);
+        }
+
+        if (playerLives.countLiving() === 0) {
+            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
+            gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+            gameOverScreen.scale.setTo(1,1);
+            gameOverScreen.anchor.setTo(0.5,0.5);
+            gameOverScreen.inputEnabled = true;
+            gameOverScreen.events.onInputDown.add(restartGame, this);
+        }
+
       }
 
     else {
+        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 50, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
         enemy.sprite.kill();
-        levelUp(playerBall);
-        if (!enemy.sprite.hasCollided) {
-            enemy.sprite.hasCollided = true;
-            enemiesLeft--;
-        }
+            if (!enemy.sprite.hasCollided) {
+                levelUp(playerBall);
+                enemy.sprite.hasCollided = true;
+                enemiesLeft--;
+            }
+        }, this);
+
+    }
+
+}
+
+function createLives() {
+    playerLives = game.add.group();
+    var firstLifeIconX = game.width - 50;
+    for (var i = 0; i < 2; i++) {
+        var lifeIcons = playerLives.create(firstLifeIconX - (60 * i), 50, 'player');
+        lifeIcons.scale.setTo(0.1,0.1);
+        lifeIcons.anchor.setTo(0.5, 0.5);
+        lifeIcons.alpha = 0.8;
     }
 
 }
@@ -188,9 +221,13 @@ LevelRoundState.prototype = {
     smallerEnemies = game.add.group();
     largerEnemies = game.add.group();
 
+    //setting initial playerscale
+
+    playerScale = 0.1;
+
     createPlayer();
 
-    //adding invicibility to the ball for 4 seconds
+    createLives();
 
     createSmallerEnemies();
 
