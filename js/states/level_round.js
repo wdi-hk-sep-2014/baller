@@ -55,24 +55,9 @@ function createPlayer() {
 
 function createSmallerEnemies() {
     for (var x = 1; x < 18; x++) {
-        var random = Math.ceil(Math.random() * 3);
-        var enemy;
-
-        if (random === 1) {
-            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'blue_ball');
-        }
-        else if (random === 2) {
-            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'red_ball');
-        }
-        else {
-            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'green_ball');
-        }
-
-
-        randomBallColor(enemy);
-
+        var enemySpriteColors = ['blue_ball', 'red_ball', 'green_ball'];
+        var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, game.rnd.pick(enemySpriteColors));
         var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
-
 
         //making enemies smaller than current player size
         enemy.scale.setTo(smallerEnemy, smallerEnemy);
