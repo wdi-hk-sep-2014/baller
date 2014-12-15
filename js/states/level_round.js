@@ -1,6 +1,6 @@
 function LevelRoundState() {}
 
-var livesRemaining = 2, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var livesRemaining = 2, playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
 var gamePlayed = false;
 var enemiesLeft = 0;
@@ -163,6 +163,14 @@ function createLives() {
     livesRemaining = 2;
     playerLives = game.add.group();
     console.log(game.width);
+    var firstLifeIconX = game.width - 50;
+    for (var i = 0; i < livesRemaining; i++) {
+        var lifeIcons = playerLives.create(firstLifeIconX - (60 * i), 50, 'player');
+        lifeIcons.scale.setTo(0.1,0.1);
+        lifeIcons.anchor.setTo(0.5, 0.5);
+        lifeIcons.alpha = 0.8;
+    }
+
 }
 
 LevelRoundState.prototype = {
