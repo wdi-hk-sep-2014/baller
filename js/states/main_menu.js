@@ -49,7 +49,12 @@ MainMenuState.prototype = {
       });
 
     function singlePlayerStart() {
-      this.game.state.start('level_master');
+      game.add.tween(menuSprites.single).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(menuSprites.multi).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(logo).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(menuSprites.options).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function(){
+        this.game.state.start('level_master');
+        }, this);
     }
 
     menuSprites.single.events.onInputDown.add(singlePlayerStart, this);

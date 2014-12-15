@@ -21,6 +21,7 @@ window.ondevicemotion = function(e) {
 
 };
 
+
 function createPlayer() {
     playerBall = game.add.sprite(centerx, centery, 'player');
     playerBall.scale.setTo(0.1,0.1);
@@ -129,12 +130,10 @@ function levelUp(playerBall) {
   playerBall.sprite.scale.y = newSize;
 }
 
-function hitEnemy(playerBall, enemy, x) {
+function hitEnemy(playerBall, enemy) {
     //  body1 is the playerBall (as it's the body that owns the callback)
     //  body2 is the body it impacted with, the enemy balls
     //  As body2 is a Phaser.Physics.P2.Body object, you access its own (the sprite) via the sprite property:
-
-    console.log(x);
 
     if (playerBall.sprite.invincible) {
         return;
