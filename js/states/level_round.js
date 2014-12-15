@@ -2,6 +2,7 @@ function LevelRoundState() {}
 
 var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
+var playerScale = 0.1;
 var gamePlayed = false;
 var enemiesLeft = 0;
 
@@ -24,7 +25,7 @@ window.ondevicemotion = function(e) {
 
 function createPlayer() {
     playerBall = game.add.sprite(centerx, centery, 'player');
-    playerBall.scale.setTo(0.1,0.1);
+    playerBall.scale.setTo(playerScale, playerScale);
     game.physics.p2.enable(playerBall);
 
     // //adding invicibility to the ball for 4 seconds
@@ -125,9 +126,10 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.015;
+  var newSize = playerBall.sprite.scale.x * 1.018;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
+  playerScale = newSize;
 }
 
 function hitEnemy(playerBall, enemy) {
@@ -148,6 +150,7 @@ function hitEnemy(playerBall, enemy) {
                     if (!playerBall.sprite.hasCollided) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
+                        createPlayer();
                     }
             }, this);
         }
@@ -161,14 +164,10 @@ function hitEnemy(playerBall, enemy) {
             gameOverScreen.events.onInputDown.add(restartGame, this);
         }
 
-        else {
-            createPlayer();
-        }
-
       }
 
     else {
-        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
+        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 50, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
         enemy.sprite.kill();
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
@@ -221,6 +220,10 @@ LevelRoundState.prototype = {
 
     smallerEnemies = game.add.group();
     largerEnemies = game.add.group();
+
+    //setting initial playerscale
+
+    playerScale = 0.1;
 
     createPlayer();
 
