@@ -11,8 +11,8 @@ var ax = 0, ay = 0,
 vx = 0, vy = 0;
 
 window.ondevicemotion = function(e) {
-  ax = e.accelerationIncludingGravity.x * 500; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -500; //acceleration along y axis
+  ax = e.accelerationIncludingGravity.x * 400; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -400; //acceleration along y axis
 
   //TODO: make tilt increase logarithimacally
 
@@ -55,7 +55,22 @@ function createPlayer() {
 
 function createSmallerEnemies() {
     for (var x = 1; x < 18; x++) {
-        var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'ball');
+        var random = Math.ceil(Math.random() * 3);
+        var enemy;
+
+        if (random === 1) {
+            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'blue_ball');
+        }
+        else if (random === 2) {
+            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'red_ball');
+        }
+        else {
+            enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, 'green_ball');
+        }
+
+
+        randomBallColor(enemy);
+
         var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
 
 
