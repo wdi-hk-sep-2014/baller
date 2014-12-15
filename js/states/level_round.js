@@ -1,6 +1,6 @@
 function LevelRoundState() {}
 
-var livesRemaining = 2, playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
 
 var gamePlayed = false;
 var enemiesLeft = 0;
@@ -57,7 +57,7 @@ function createSmallerEnemies() {
     for (var x = 1; x < 18; x++) {
         var enemySpriteColors = ['blue_ball', 'red_ball', 'green_ball'];
         var enemy = smallerEnemies.create(game.world.randomX, game.world.randomY, game.rnd.pick(enemySpriteColors));
-        var smallerEnemy = game.rnd.realInRange(0.001, playerBall.scale.x);
+        var smallerEnemy = game.rnd.realInRange(0.015, playerBall.scale.x);
 
         //making enemies smaller than current player size
         enemy.scale.setTo(smallerEnemy, smallerEnemy);
@@ -140,12 +140,22 @@ function hitEnemy(playerBall, enemy) {
     }
 
     else if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
-        playerBall.sprite.kill();
-        gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
-        gameOverScreen.scale.setTo(1,1);
-        gameOverScreen.anchor.setTo(0.5,0.5);
-        gameOverScreen.inputEnabled = true;
-        gameOverScreen.events.onInputDown.add(restartGame, this);
+        playerBall.sprite.kill(); //need to add an animation here to indicate "Death"
+        playerLives.next().destroy();
+
+
+        if (playerLives.countLiving() === 0) {
+            gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+            gameOverScreen.scale.setTo(1,1);
+            gameOverScreen.anchor.setTo(0.5,0.5);
+            gameOverScreen.inputEnabled = true;
+            gameOverScreen.events.onInputDown.add(restartGame, this);
+        }
+
+        else {
+            createPlayer();
+        }
+
       }
 
     else {
@@ -160,11 +170,9 @@ function hitEnemy(playerBall, enemy) {
 }
 
 function createLives() {
-    livesRemaining = 2;
     playerLives = game.add.group();
-    console.log(game.width);
     var firstLifeIconX = game.width - 50;
-    for (var i = 0; i < livesRemaining; i++) {
+    for (var i = 0; i < 2; i++) {
         var lifeIcons = playerLives.create(firstLifeIconX - (60 * i), 50, 'player');
         lifeIcons.scale.setTo(0.1,0.1);
         lifeIcons.anchor.setTo(0.5, 0.5);
