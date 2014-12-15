@@ -140,11 +140,20 @@ function hitEnemy(playerBall, enemy) {
     }
 
     else if (enemy.sprite.scale.x > playerBall.sprite.scale.x) {
-        playerBall.sprite.kill(); //need to add an animation here to indicate "Death"
-        playerLives.next().destroy();
 
+
+        if (playerLives.countLiving() !== 0) {
+            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function() {
+                playerBall.sprite.kill();
+                    if (!playerBall.sprite.hasCollided) {
+                        playerBall.sprite.hasCollided = true;
+                        playerLives.next().destroy();
+                    }
+            }, this);
+        }
 
         if (playerLives.countLiving() === 0) {
+            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
             gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
             gameOverScreen.scale.setTo(1,1);
             gameOverScreen.anchor.setTo(0.5,0.5);
@@ -159,12 +168,15 @@ function hitEnemy(playerBall, enemy) {
       }
 
     else {
+        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
         enemy.sprite.kill();
-        levelUp(playerBall);
-        if (!enemy.sprite.hasCollided) {
-            enemy.sprite.hasCollided = true;
-            enemiesLeft--;
-        }
+            if (!enemy.sprite.hasCollided) {
+                levelUp(playerBall);
+                enemy.sprite.hasCollided = true;
+                enemiesLeft--;
+            }
+        }, this);
+
     }
 
 }
