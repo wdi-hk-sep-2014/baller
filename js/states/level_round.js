@@ -13,8 +13,8 @@ var ax = 0, ay = 0,
 vx = 0, vy = 0;
 
 window.ondevicemotion = function(e) {
-  ax = e.accelerationIncludingGravity.x * 400; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -400; //acceleration along y axis
+  ax = e.accelerationIncludingGravity.x * inputSensitivity; //acceleration along x axis
+  ay = e.accelerationIncludingGravity.y * -inputSensitivity; //acceleration along y axis
 
   //TODO: make tilt increase logarithimacally
 
@@ -221,7 +221,7 @@ LevelRoundState.prototype = {
 
     // starting collision events
     game.physics.p2.setImpactEvents(true);
-    game.physics.p2.restitution = 1.05;
+    game.physics.p2.restitution = 0.95;
 
     //creating a collision group for player and enemies
 

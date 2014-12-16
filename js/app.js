@@ -9,6 +9,7 @@ Game.prototype = {
     game.state.add('main_menu', MainMenuState);
     game.state.add('level_master', LevelMasterState);
     game.state.add('level_round', LevelRoundState);
+    game.state.add('options', optionsState);
     game.state.start('boot');
 
   }
