@@ -90,8 +90,15 @@ optionsState.prototype = {
   },
 
   update: function() {
+
     testBall.body.force.x = ax;
     testBall.body.force.y = ay;
+
+    if (cursors.left.isDown) {testBall.body.rotateLeft(100);}   //testBall movement
+    else if (cursors.right.isDown){testBall.body.rotateRight(100);}
+    else {testBall.body.setZeroRotation();}
+    if (cursors.up.isDown){testBall.body.thrust(inputSensitivity * 2);}
+    else if (cursors.down.isDown){testBall.body.reverse(inputSensitivity * 2);}
   }
 };
 

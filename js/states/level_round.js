@@ -71,6 +71,8 @@ function createSmallerEnemies() {
         var randv2 = game.rnd.realInRange(-300, 300);
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
+        enemy.alpha = 0;
+        game.add.tween(enemy).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 500 );
 
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
