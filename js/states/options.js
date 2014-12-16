@@ -1,6 +1,6 @@
 function optionsState() {}
 
-var optionsTitle, testBall, testCollisionGroup;
+var optionsTitle, testBall, testCollisionGroup, backButton;
 var inputSensitivity = 400;
 
 function sensitivityTest() {
@@ -19,6 +19,13 @@ optionsState.prototype = {
     game.physics.p2.updateBoundsCollisionGroup();
 
     sensitivityTest();
+
+    backButton = game.add.sprite(100, game.height - 100, 'back_button');
+    backButton.anchor.setTo(0.5,0.5);
+    backButton.scale.setTo(0.3,0.3);
+    backButton.alpha = 0;
+    backButton.inputEnabled = true;
+    backButtonAnimation = game.add.tween(backButton).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
 
     var optionsTitle = game.add.sprite(centerx, oneThirdHeight, 'sensitivity');
     optionsTitle.anchor.setTo(0.5,0.5);
@@ -45,6 +52,7 @@ optionsState.prototype = {
         sensitivitySprites[option.name] = sprite;
     });
 
+    sensitivitySprites.sense_medium.scale.setTo(0.5,0.5);
     // have some rotten code here. Will refactor.
 
     function highSensitivity() {
@@ -72,6 +80,12 @@ optionsState.prototype = {
     sensitivitySprites.sense_high.events.onInputDown.add(highSensitivity, this);
     sensitivitySprites.sense_medium.events.onInputDown.add(mediumSensitivity, this);
     sensitivitySprites.sense_low.events.onInputDown.add(lowSensitivity, this);
+
+    function backToMenu() {
+      this.game.state.start('main_menu');
+    }
+
+    backButton.events.onInputDown.add(backToMenu, this);
 
   },
 

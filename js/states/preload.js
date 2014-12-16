@@ -1,4 +1,4 @@
-var isGameLoaded, loadingBall, loadingText;
+var isGameLoaded, loadingBall, loadingText, logo, startgame;
 
 function start() {
 
@@ -19,6 +19,7 @@ function start() {
     game.load.image('sense_medium', 'assets/sense_medium.png');
     game.load.image('sense_low', 'assets/sense_low.png');
     game.load.image('sensitivity', 'assets/sensitivity.png');
+    game.load.image('back_button', 'assets/back_button.png');
     game.load.start();
 
 }
@@ -50,13 +51,13 @@ function loadComplete() {
 
     game.time.events.add(1000, (function() {
 
-        var logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
+        logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
         logo.anchor.setTo(0.5,0.5);
         logo.scale.setTo(0.55,0.55);
         logo.alpha = 0;
         game.add.tween(logo).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
 
-        var startgame = game.add.sprite(centerx, centery + 250, 'startbutton');
+        startgame = game.add.sprite(centerx, centery + 250, 'startbutton');
         startgame.anchor.setTo(0.5,0.5);
         startgame.scale.setTo(0.65,0.65);
         startgame.alpha = 0;
@@ -68,8 +69,6 @@ function loadComplete() {
 
     game.add.tween(loadingBall).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
     game.add.tween(loadingText).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
-
-
 
 
 
@@ -96,12 +95,26 @@ Preload.prototype = {
 
   update: function() {
 
+    function fadeOutStartScreen() {
+
+        var logo_animation = game.add.tween(logo);
+        logo_animation.to({ x: centerx, y: oneThirdHeight }, 1000, Phaser.Easing.Quadratic.InOut, true);
+
+        startgame.destroy();
+
+        var logo_scale = game.add.tween(logo.scale);
+        logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function() {
+            this.game.state.start('main_menu');
+        });
+    }
+
     if (game.input.mousePointer.isDown && isGameLoaded)
-    { this.game.state.start('main_menu');
+    {
+        fadeOutStartScreen();
     }
 
     else if (game.input.pointer1.isDown && isGameLoaded) {
-      this.game.state.start('main_menu');
+        fadeOutStartScreen();
     }
   }
 };
