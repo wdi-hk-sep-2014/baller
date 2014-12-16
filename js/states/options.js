@@ -4,7 +4,7 @@ var optionsTitle, testBall, testCollisionGroup, backButton;
 var inputSensitivity = 400;
 
 function sensitivityTest() {
-  testBall = game.add.sprite(game.width - 50, game.height - 50, 'player');
+  testBall = game.add.sprite(50, 50, 'player');
   testBall.scale.setTo(playerScale, playerScale);
   game.physics.p2.enable(testBall);
   testBall.body.setCollisionGroup(testCollisionGroup);

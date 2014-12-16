@@ -34,7 +34,7 @@ MainMenuState.prototype = {
         sprite.scale.setTo(0.3);
         sprite.alpha = 0;
         sprite.inputEnabled = true;
-        game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 500);
+        game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true);
         menuSprites[option.name] = sprite;
       });
 
