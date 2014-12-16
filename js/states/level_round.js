@@ -1,11 +1,10 @@
 function LevelRoundState() {}
 
-var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
+var playerLives, playerBall, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
 var playerScale = 0.1;
 var gamePlayed = false;
 var hasRespawnedOnce = false;
-var enemiesLeft = 0;
 
 //accelerometer controls
 
@@ -75,8 +74,6 @@ function createSmallerEnemies() {
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
-
-        enemiesLeft++;
     }
 }
 
@@ -100,8 +97,6 @@ function createLargerEnemies() {
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
 
-
-        enemiesLeft++;
     }
 }
 
@@ -123,8 +118,7 @@ function accelerateToObject(obj1, obj2, speed) {
 
 function restartGame() {
   game.state.start('level_round');
-  // this.game.state.start('level_round');
-  enemiesLeft = 0;
+  gameOverScreen = null;
 }
 
 
@@ -192,7 +186,6 @@ function hitEnemy(playerBall, enemy) {
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
                 enemy.sprite.hasCollided = true;
-                enemiesLeft--;
             }
         }, this);
 
@@ -273,8 +266,6 @@ LevelRoundState.prototype = {
     // This function is called 60 times per second
     // It contains the game's logic
 
-    // document.getElementById("info").innerHTML = enemiesLeft; //used for debugging
-
     //assigning force using the accelerometer
 
     playerBall.body.force.x = ax;
@@ -295,7 +286,7 @@ LevelRoundState.prototype = {
 
     //checking for the game win condition
 
-    if (enemiesLeft === 0) {
+    if (smallerEnemies.countLiving === 0 && largerEnemies.countLiving === 0) {
         var winScreen = game.add.sprite(centerx, centery, 'youwin');
         winScreen.scale.setTo(0.5,0.5);
         winScreen.anchor.setTo(0.5,0.5);
