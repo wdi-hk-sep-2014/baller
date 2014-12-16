@@ -4,7 +4,6 @@ var playerLives, playerBall, smallerEnemies, largerEnemies, enemiesCollisionGrou
 
 var playerScale = 0.1;
 var gamePlayed = false;
-var hasRespawnedOnce = false;
 
 //accelerometer controls
 
@@ -150,8 +149,7 @@ function hitEnemy(playerBall, enemy) {
                         playerLives.next().destroy();
 
 
-                        if (!hasRespawnedOnce) {
-                            hasRespawnedOnce = true;
+                        if (playerLives.countLiving() === 1) {
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
                             var respawnMessageAnimation = game.add.tween(respawnMessage);
