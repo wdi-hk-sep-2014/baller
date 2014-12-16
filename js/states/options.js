@@ -4,7 +4,7 @@ var optionsTitle, testBall, testCollisionGroup, backButton;
 var inputSensitivity = 400;
 
 function sensitivityTest() {
-  testBall = game.add.sprite(game.width - 50, game.height - 50, 'player');
+  testBall = game.add.sprite(50, 50, 'player');
   testBall.scale.setTo(playerScale, playerScale);
   game.physics.p2.enable(testBall);
   testBall.body.setCollisionGroup(testCollisionGroup);
@@ -20,12 +20,14 @@ optionsState.prototype = {
 
     sensitivityTest();
 
+    // this could be a prefab
+
     backButton = game.add.sprite(100, game.height - 100, 'back_button');
     backButton.anchor.setTo(0.5,0.5);
-    backButton.scale.setTo(0.3,0.3);
+    backButton.scale.setTo(0.2,0.2);
     backButton.alpha = 0;
     backButton.inputEnabled = true;
-    backButtonAnimation = game.add.tween(backButton).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
+    backButtonAnimation = game.add.tween(backButton).to({alpha: 0.2}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
 
     var optionsTitle = game.add.sprite(centerx, oneThirdHeight, 'sensitivity');
     optionsTitle.anchor.setTo(0.5,0.5);
@@ -90,8 +92,15 @@ optionsState.prototype = {
   },
 
   update: function() {
+
     testBall.body.force.x = ax;
     testBall.body.force.y = ay;
+
+    if (cursors.left.isDown) {testBall.body.rotateLeft(inputSensitivity / 3);}   //testBall movement
+    else if (cursors.right.isDown){testBall.body.rotateRight(inputSensitivity / 3);}
+    else {testBall.body.setZeroRotation();}
+    if (cursors.up.isDown){testBall.body.thrust(inputSensitivity * 2);}
+    else if (cursors.down.isDown){testBall.body.reverse(inputSensitivity * 2);}
   }
 };
 

@@ -1,6 +1,6 @@
 function LevelRoundState() {}
 
-var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
 var playerScale = 0.1;
 var gamePlayed = false;
@@ -91,8 +91,10 @@ function createLargerEnemies() {
 
         var randv = game.rnd.realInRange(-300, 300);
         var randv2 = game.rnd.realInRange(-300, 300);
+
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
+
 
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
@@ -104,7 +106,7 @@ function createLargerEnemies() {
 }
 
 function moveLargerTowardPlayer (enemy) {
-    accelerateToObject(enemy, playerBall, 150);
+    accelerateToObject(enemy, playerBall, playerDifficulty * 75);
 }
 
 function moveSmallerTowardPlayer (enemy) {
@@ -172,11 +174,14 @@ function hitEnemy(playerBall, enemy) {
 
         if (playerLives.countLiving() === 0) {
             game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
-            gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
-            gameOverScreen.scale.setTo(1,1);
-            gameOverScreen.anchor.setTo(0.5,0.5);
-            gameOverScreen.inputEnabled = true;
-            gameOverScreen.events.onInputDown.add(restartGame, this);
+            if (!gameOverScreen) {
+                gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+                gameOverScreen.scale.setTo(1,1);
+                gameOverScreen.anchor.setTo(0.5,0.5);
+                gameOverScreen.inputEnabled = true;
+                gameOverScreen.events.onInputDown.add(restartGame, this);
+            }
+
         }
 
       }
@@ -248,6 +253,19 @@ LevelRoundState.prototype = {
 
     createLargerEnemies();
 
+    //this could be a prefab
+    backButton = game.add.sprite(100, game.height - 100, 'back_button');
+    backButton.anchor.setTo(0.5,0.5);
+    backButton.scale.setTo(0.2,0.2);
+    backButton.alpha = 0;
+    backButton.inputEnabled = true;
+    backButtonAnimation = game.add.tween(backButton).to({alpha: 0.1}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
+
+    function backToDifficulty() {
+      this.game.state.start('level_master');
+    }
+
+    backButton.events.onInputDown.add(backToDifficulty, this);
 
   },
 
@@ -269,11 +287,11 @@ LevelRoundState.prototype = {
 
     //keyboard movement
 
-    if (cursors.left.isDown) {playerBall.body.rotateLeft(100);}   //playerBall movement
-    else if (cursors.right.isDown){playerBall.body.rotateRight(100);}
+    if (cursors.left.isDown) {playerBall.body.rotateLeft(inputSensitivity / 3);}   //playerBall movement
+    else if (cursors.right.isDown){playerBall.body.rotateRight(inputSensitivity / 3);}
     else {playerBall.body.setZeroRotation();}
-    if (cursors.up.isDown){playerBall.body.thrust(800);}
-    else if (cursors.down.isDown){playerBall.body.reverse(800);}
+    if (cursors.up.isDown){playerBall.body.thrust(inputSensitivity * 2);}
+    else if (cursors.down.isDown){playerBall.body.reverse(inputSensitivity * 2);}
 
     //checking for the game win condition
 

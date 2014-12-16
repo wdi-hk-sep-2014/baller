@@ -15,6 +15,10 @@ function start() {
     game.load.image('red_ball', 'assets/red_ball.png');
     game.load.image('green_ball', 'assets/green_ball.png');
     game.load.image('blue_ball', 'assets/blue_ball.png');
+    game.load.image('squishy', 'assets/squishy.png');
+    game.load.image('bouncy', 'assets/bouncy.png');
+    game.load.image('hardcore', 'assets/hardcore.png');
+    game.load.image('set_level', 'assets/set_level.png');
     game.load.image('sense_high', 'assets/sense_high.png');
     game.load.image('sense_medium', 'assets/sense_medium.png');
     game.load.image('sense_low', 'assets/sense_low.png');
