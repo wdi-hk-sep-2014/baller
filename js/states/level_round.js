@@ -131,6 +131,7 @@ function levelUp(playerBall) {
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
   playerScale = newSize;
+  game.add.tween(playerBall.sprite.scale).to({x:newSize * 1.2, y:newSize * 1.2}, 25,Phaser.Easing.Linear.None, true, 0, 0, true);
 }
 
 function hitEnemy(playerBall, enemy) {
