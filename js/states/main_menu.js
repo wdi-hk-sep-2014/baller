@@ -47,18 +47,28 @@ MainMenuState.prototype = {
         menuSprites[option.name] = sprite;
       });
 
-    function selectLevel() {
+    // some repeated code here with a small difference. will refactor.
+
+    function fadeOutMenu(stateToStart) {
       game.add.tween(menuSprites.select_level).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(menuSprites.options).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(logo).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(menuSprites.options).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function(){
-        this.game.state.start('level_master');
+        this.game.state.start(stateToStart);
         }, this);
     }
 
-    menuSprites.select_level.events.onInputDown.add(selectLevel, this);
+    function selectLevel() {
+      fadeOutMenu('level_master');
+    }
 
-    // actually, make it go to levelLoader
+    function selectOptions() {
+      fadeOutMenu('options');
+    }
+
+
+    menuSprites.select_level.events.onInputDown.add(selectLevel, this);
+    menuSprites.options.events.onInputDown.add(selectOptions, this);
 
   },
 
