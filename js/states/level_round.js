@@ -91,6 +91,7 @@ function createLargerEnemies() {
 
         var randv = game.rnd.realInRange(-300, 300);
         var randv2 = game.rnd.realInRange(-300, 300);
+
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
 
@@ -105,7 +106,7 @@ function createLargerEnemies() {
 }
 
 function moveLargerTowardPlayer (enemy) {
-    accelerateToObject(enemy, playerBall, 150);
+    accelerateToObject(enemy, playerBall, playerDifficulty * 75);
 }
 
 function moveSmallerTowardPlayer (enemy) {

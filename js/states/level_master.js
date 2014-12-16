@@ -40,7 +40,7 @@ LevelMasterState.prototype = {
     }
 
     function hardcoreLevel() {
-      playerDifficulty = 3;
+      playerDifficulty = 8;
       this.game.state.start('level_round');
     }
 
