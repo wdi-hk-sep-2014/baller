@@ -71,8 +71,6 @@ function createSmallerEnemies() {
         var randv2 = game.rnd.realInRange(-300, 300);
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
-        enemy.alpha = 0;
-        game.add.tween(enemy).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 500 );
 
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
@@ -95,6 +93,7 @@ function createLargerEnemies() {
         var randv2 = game.rnd.realInRange(-300, 300);
         enemy.body.velocity.x = randv;
         enemy.body.velocity.y = randv2;
+
 
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
@@ -270,11 +269,11 @@ LevelRoundState.prototype = {
 
     //keyboard movement
 
-    if (cursors.left.isDown) {playerBall.body.rotateLeft(100);}   //playerBall movement
-    else if (cursors.right.isDown){playerBall.body.rotateRight(100);}
+    if (cursors.left.isDown) {playerBall.body.rotateLeft(inputSensitivity / 3);}   //playerBall movement
+    else if (cursors.right.isDown){playerBall.body.rotateRight(inputSensitivity / 3);}
     else {playerBall.body.setZeroRotation();}
-    if (cursors.up.isDown){playerBall.body.thrust(800);}
-    else if (cursors.down.isDown){playerBall.body.reverse(800);}
+    if (cursors.up.isDown){playerBall.body.thrust(inputSensitivity * 2);}
+    else if (cursors.down.isDown){playerBall.body.reverse(inputSensitivity * 2);}
 
     //checking for the game win condition
 
