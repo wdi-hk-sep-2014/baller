@@ -12,6 +12,7 @@ function start() {
     game.load.image('options', 'assets/options.png');
     game.load.image('getready', 'assets/get_ready.png');
     game.load.image('youwin', 'assets/you_win.png');
+    game.load.image('respawn', 'assets/respawn.png');
     game.load.image('red_ball', 'assets/red_ball.png');
     game.load.image('green_ball', 'assets/green_ball.png');
     game.load.image('blue_ball', 'assets/blue_ball.png');

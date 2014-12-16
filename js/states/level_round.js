@@ -4,6 +4,7 @@ var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollis
 
 var playerScale = 0.1;
 var gamePlayed = false;
+var hasRespawnedOnce = false;
 var enemiesLeft = 0;
 
 //accelerometer controls
@@ -126,7 +127,7 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.018;
+  var newSize = playerBall.sprite.scale.x * 1.022;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
   playerScale = newSize;
@@ -150,7 +151,20 @@ function hitEnemy(playerBall, enemy) {
                     if (!playerBall.sprite.hasCollided) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
-                        createPlayer();
+
+
+                        if (!hasRespawnedOnce) {
+                            hasRespawnedOnce = true;
+                            var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
+                            respawnMessage.scale.setTo(0.25,0.25);
+                            var respawnMessageAnimation = game.add.tween(respawnMessage);
+                            respawnMessageAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false);
+                        }
+
+
+                        game.time.events.add(2000, (function() {
+                            createPlayer();
+                        }), this);
                     }
             }, this);
         }
@@ -167,7 +181,7 @@ function hitEnemy(playerBall, enemy) {
       }
 
     else {
-        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 50, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
+        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 75, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
         enemy.sprite.kill();
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
@@ -264,7 +278,8 @@ LevelRoundState.prototype = {
 
     if (enemiesLeft === 0) {
         var winScreen = game.add.sprite(centerx, centery, 'youwin');
-         winScreen.anchor.setTo(0.5,0.5);
+        winScreen.scale.setTo(0.5,0.5);
+        winScreen.anchor.setTo(0.5,0.5);
     }
 
   }
