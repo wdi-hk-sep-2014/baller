@@ -117,7 +117,6 @@ function accelerateToObject(obj1, obj2, speed) {
 
 function restartGame() {
   game.state.start('level_round');
-  gameOverScreen = null;
 }
 
 
@@ -148,7 +147,6 @@ function hitEnemy(playerBall, enemy) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
 
-
                         if (playerLives.countLiving() === 1) {
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
@@ -165,15 +163,15 @@ function hitEnemy(playerBall, enemy) {
         }
 
         if (playerLives.countLiving() === 0) {
-            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
-            if (!gameOverScreen) {
-                gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+            if (!playerBall.sprite.hasCollided) {
+                playerBall.sprite.hasCollided = true;
+                game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
+                var gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
                 gameOverScreen.scale.setTo(1,1);
                 gameOverScreen.anchor.setTo(0.5,0.5);
                 gameOverScreen.inputEnabled = true;
                 gameOverScreen.events.onInputDown.add(restartGame, this);
-            }
-
+                }
         }
 
       }
