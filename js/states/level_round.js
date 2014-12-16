@@ -4,6 +4,7 @@ var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollis
 
 var playerScale = 0.1;
 var gamePlayed = false;
+var hasRespawnedOnce = false;
 var enemiesLeft = 0;
 
 //accelerometer controls
@@ -150,6 +151,17 @@ function hitEnemy(playerBall, enemy) {
                     if (!playerBall.sprite.hasCollided) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
+
+
+                        if (!hasRespawnedOnce) {
+                            hasRespawnedOnce = true;
+                            var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
+                            respawnMessage.scale.setTo(0.25,0.25);
+                            var respawnMessageAnimation = game.add.tween(respawnMessage);
+                            respawnMessageAnimation.to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 0, 7, false);
+                        }
+
+
                         game.time.events.add(2000, (function() {
                             createPlayer();
                         }), this);
@@ -266,7 +278,8 @@ LevelRoundState.prototype = {
 
     if (enemiesLeft === 0) {
         var winScreen = game.add.sprite(centerx, centery, 'youwin');
-         winScreen.anchor.setTo(0.5,0.5);
+        winScreen.scale.setTo(0.5,0.5);
+        winScreen.anchor.setTo(0.5,0.5);
     }
 
   }
