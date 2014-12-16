@@ -127,7 +127,7 @@ function restartGame() {
 
 
 function levelUp(playerBall) {
-  var newSize = playerBall.sprite.scale.x * 1.02;
+  var newSize = playerBall.sprite.scale.x * 1.022;
   playerBall.sprite.scale.x = newSize;
   playerBall.sprite.scale.y = newSize;
   playerScale = newSize;
@@ -181,7 +181,7 @@ function hitEnemy(playerBall, enemy) {
       }
 
     else {
-        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 50, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
+        game.add.tween(enemy.sprite.scale).to({ x: 0, y: 0}, 75, Phaser.Easing.Quadratic.InOut, true, 0).onComplete.add(function(){
         enemy.sprite.kill();
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
