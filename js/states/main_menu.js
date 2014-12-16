@@ -30,9 +30,8 @@ MainMenuState.prototype = {
     // creating the menu options, credits to mddub
 
     var menuOptions = [
-      {name: 'single', yOffset: 120},
-      {name: 'multi', yOffset: 220},
-      {name: 'options', yOffset: 320}
+      {name: 'select_level', yOffset: 120},
+      {name: 'options', yOffset: 220},
     ];
 
     var menuSprites = {}; // to be filled with menu sprite objects
@@ -48,16 +47,16 @@ MainMenuState.prototype = {
         menuSprites[option.name] = sprite;
       });
 
-    function singlePlayerStart() {
-      game.add.tween(menuSprites.single).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(menuSprites.multi).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
+    function selectLevel() {
+      game.add.tween(menuSprites.select_level).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(menuSprites.options).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(logo).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(menuSprites.options).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function(){
         this.game.state.start('level_master');
         }, this);
     }
 
-    menuSprites.single.events.onInputDown.add(singlePlayerStart, this);
+    menuSprites.select_level.events.onInputDown.add(selectLevel, this);
 
     // actually, make it go to levelLoader
 
