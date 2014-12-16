@@ -1,6 +1,6 @@
 function LevelRoundState() {}
 
-var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup;
+var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
 var playerScale = 0.1;
 var gamePlayed = false;
@@ -173,11 +173,14 @@ function hitEnemy(playerBall, enemy) {
 
         if (playerLives.countLiving() === 0) {
             game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
-            gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
-            gameOverScreen.scale.setTo(1,1);
-            gameOverScreen.anchor.setTo(0.5,0.5);
-            gameOverScreen.inputEnabled = true;
-            gameOverScreen.events.onInputDown.add(restartGame, this);
+            if (!gameOverScreen) {
+                gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+                gameOverScreen.scale.setTo(1,1);
+                gameOverScreen.anchor.setTo(0.5,0.5);
+                gameOverScreen.inputEnabled = true;
+                gameOverScreen.events.onInputDown.add(restartGame, this);
+            }
+
         }
 
       }
