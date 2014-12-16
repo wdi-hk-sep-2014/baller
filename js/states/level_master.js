@@ -49,6 +49,19 @@ LevelMasterState.prototype = {
     levelSprites.bouncy.events.onInputDown.add(bouncyLevel,this);
     levelSprites.hardcore.events.onInputDown.add(hardcoreLevel,this);
 
+    backButton = game.add.sprite(100, game.height - 100, 'back_button');
+    backButton.anchor.setTo(0.5,0.5);
+    backButton.scale.setTo(0.2,0.2);
+    backButton.alpha = 0;
+    backButton.inputEnabled = true;
+    backButtonAnimation = game.add.tween(backButton).to({alpha: 0.1}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
+
+    function backToMenu() {
+      this.game.state.start('main_menu');
+    }
+
+    backButton.events.onInputDown.add(backToMenu, this);
+
     // this.game.state.start('level_round');
   }
 };

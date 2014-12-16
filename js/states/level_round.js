@@ -252,6 +252,19 @@ LevelRoundState.prototype = {
 
     createLargerEnemies();
 
+    //this could be a prefab
+    backButton = game.add.sprite(100, game.height - 100, 'back_button');
+    backButton.anchor.setTo(0.5,0.5);
+    backButton.scale.setTo(0.2,0.2);
+    backButton.alpha = 0;
+    backButton.inputEnabled = true;
+    backButtonAnimation = game.add.tween(backButton).to({alpha: 0.1}, 1000, Phaser.Easing.Quadratic.InOut, true, 2000);
+
+    function backToDifficulty() {
+      this.game.state.start('level_master');
+    }
+
+    backButton.events.onInputDown.add(backToDifficulty, this);
 
   },
 
