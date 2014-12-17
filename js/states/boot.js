@@ -4,7 +4,14 @@ screenRatio = windowx / windowy,
 centerx = windowx / 2,
 centery = windowy / 2;
 
+var SENSITIVITIES = {
+  'sense_high': 500,
+  'sense_medium': 400,
+  'sense_low': 300
+};
+
 var cursors;
+var inputSensitivity = SENSITIVITIES['sense_medium'];
 
 function Boot() {}
 
