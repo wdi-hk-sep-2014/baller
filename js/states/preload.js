@@ -1,5 +1,3 @@
-var isGameLoaded, loadingBall, loadingText, logo, startgame;
-
 function start() {
 
     game.load.image('ballerlogo', 'assets/ballerlogo.png');
@@ -36,46 +34,50 @@ function loadStart() {
 
   //bouncing ball animation
 
-    isGameLoaded = false;
+    this.isGameLoaded = false;
 
-    loadingBall = game.add.sprite(centerx, centery, 'loading');
-    loadingBall.anchor.setTo(0.5,0.5);
-    loadingBall.animations.add('bounce');
-    loadingBall.animations.play('bounce', 9, true);
+    this.loadingBall = game.add.sprite(centerx, centery, 'loading');
+    this.loadingBall.anchor.setTo(0.5,0.5);
+    this.loadingBall.animations.add('bounce');
+    this.loadingBall.animations.play('bounce', 9, true);
 
-    loadingText = game.add.sprite(centerx - 15, centery + 130, 'loading_text');
-    loadingText.scale.setTo(0.5, 0.5);
-    loadingText.anchor.setTo(0.5, 0.5);
-    loadingText.animations.add('textDotDotDot');
-    loadingText.animations.play('textDotDotDot', 2, true);
+    this.loadingText = game.add.sprite(centerx - 15, centery + 130, 'loading_text');
+    this.loadingText.scale.setTo(0.5, 0.5);
+    this.loadingText.anchor.setTo(0.5, 0.5);
+    this.loadingText.animations.add('textDotDotDot');
+    this.loadingText.animations.play('textDotDotDot', 2, true);
 }
 
 function loadComplete() {
-
-    isGameLoaded = true;
 
     //logo and start button to be faded in after 1 second
 
     game.time.events.add(1000, (function() {
 
-        logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
-        logo.anchor.setTo(0.5,0.5);
-        logo.scale.setTo(0.55,0.55);
-        logo.alpha = 0;
-        game.add.tween(logo).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
+        this.logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
+        this.logo.anchor.setTo(0.5,0.5);
+        this.logo.scale.setTo(0.55,0.55);
+        this.logo.alpha = 0;
+        game.add.tween(this.logo).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
 
-        startgame = game.add.sprite(centerx, centery + 250, 'startbutton');
-        startgame.anchor.setTo(0.5,0.5);
-        startgame.scale.setTo(0.65,0.65);
-        startgame.alpha = 0;
-        game.add.tween(startgame).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
+        this.startgame = game.add.sprite(centerx, centery + 250, 'startbutton');
+        this.startgame.anchor.setTo(0.5,0.5);
+        this.startgame.scale.setTo(0.65,0.65);
+        this.startgame.alpha = 0;
+        game.add.tween(this.startgame).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000).onComplete.add(function(){
+            this.isGameLoaded = true;
+            this.logo_animation = game.add.tween(this.logo);
+            this.logo_scale = game.add.tween(this.logo.scale);
+        }, this);
 
     }), this);
 
+
+
     //fade out the old loading animation
 
-    game.add.tween(loadingBall).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
-    game.add.tween(loadingText).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
+    game.add.tween(this.loadingBall).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
+    game.add.tween(this.loadingText).to({alpha: 0}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
 
 
 
@@ -101,27 +103,16 @@ Preload.prototype = {
   },
 
   update: function() {
+    //this here refers to preload
 
-    function fadeOutStartScreen() {
+    if ((game.input.mousePointer.isDown || game.input.pointer1.isDown) && this.isGameLoaded) {
+        this.logo_animation.to({ x: centerx, y: oneThirdHeight }, 1000, Phaser.Easing.Quadratic.InOut, true);
+        this.startgame.destroy();
+        this.logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function() {
+        this.game.state.start('main_menu');
+    }, this);
 
-        var logo_animation = game.add.tween(logo);
-        logo_animation.to({ x: centerx, y: oneThirdHeight }, 1000, Phaser.Easing.Quadratic.InOut, true);
-
-        startgame.destroy();
-
-        var logo_scale = game.add.tween(logo.scale);
-        logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function() {
-            this.game.state.start('main_menu');
-        });
     }
 
-    if (game.input.mousePointer.isDown && isGameLoaded)
-    {
-        fadeOutStartScreen();
-    }
-
-    else if (game.input.pointer1.isDown && isGameLoaded) {
-        fadeOutStartScreen();
-    }
   }
 };
