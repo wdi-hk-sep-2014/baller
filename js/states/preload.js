@@ -24,6 +24,10 @@ function start() {
     game.load.image('sense_low', 'assets/sense_low.png');
     game.load.image('sensitivity', 'assets/sensitivity.png');
     game.load.image('back_button', 'assets/back_button.png');
+    game.load.audio('bounce', ['assets/bounce_1.ogg', 'assets/bounce_1.m4a']);
+    game.load.audio('death', ['assets/death_1.ogg', 'assets/death_1.m4a']);
+    game.load.audio('eat', ['assets/eat_1.ogg', 'assets/eat_1.m4a']);
+    game.load.audio('win', ['assets/win_1.ogg', 'assets/win_1.m4a']);
     game.load.start();
 
 }

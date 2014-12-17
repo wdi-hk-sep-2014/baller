@@ -2,6 +2,9 @@ function LevelRoundState() {}
 
 var playerLives, playerBall, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
+//variables for sound
+var playerEatSound, playerDeathSound, playerWinSound;
+
 var playerScale = 0.1;
 var gamePlayed = false;
 
@@ -147,7 +150,10 @@ function hitEnemy(playerBall, enemy) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
 
-                        if (playerLives.countLiving() === 1) {
+                        playerDeathSound.play();
+
+                        if (!hasRespawnedOnce) {
+                            hasRespawnedOnce = true;
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
                             var respawnMessageAnimation = game.add.tween(respawnMessage);
@@ -182,6 +188,7 @@ function hitEnemy(playerBall, enemy) {
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
                 enemy.sprite.hasCollided = true;
+                playerEatSound.play();
             }
         }, this);
 
@@ -210,6 +217,17 @@ LevelRoundState.prototype = {
 
 
   create: function() {
+
+    //adding some sound effects
+
+    playerEatSound = game.add.audio('eat');
+    playerDeathSound = game.add.audio('death');
+    playerWinSound = game.add.audio('win');
+
+    // playerWinSound depends on win condition which has been changed in previous branch. will note code to be added here:
+
+    //playerWinSound.play();
+
 
     // starting the P2JS system
     game.physics.startSystem(Phaser.Physics.P2JS);
@@ -287,6 +305,5 @@ LevelRoundState.prototype = {
         winScreen.scale.setTo(0.5,0.5);
         winScreen.anchor.setTo(0.5,0.5);
     }
-
   }
 };
