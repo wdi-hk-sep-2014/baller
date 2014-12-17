@@ -4,6 +4,8 @@ screenRatio = windowx / windowy,
 centerx = windowx / 2,
 centery = windowy / 2;
 
+var cursors;
+
 function Boot() {}
 
 Boot.prototype = {
@@ -29,4 +31,3 @@ Boot.prototype = {
 
   }
 };
-
