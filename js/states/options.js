@@ -54,7 +54,7 @@ optionsState.prototype = {
         sensitivitySprites[option.name] = sprite;
     });
 
-    sensitivitySprites.sense_medium.scale.setTo(0.5,0.5);
+
     // have some rotten code here. Will refactor.
 
     function highSensitivity() {
@@ -83,6 +83,16 @@ optionsState.prototype = {
     sensitivitySprites.sense_medium.events.onInputDown.add(mediumSensitivity, this);
     sensitivitySprites.sense_low.events.onInputDown.add(lowSensitivity, this);
 
+    if (inputSensitivity === 300) {
+        sensitivitySprites.sense_low.scale.setTo(0.5,0.5);
+    }
+    else if (inputSensitivity === 400) {
+        sensitivitySprites.sense_medium.scale.setTo(0.5,0.5);
+    }
+    else {
+        sensitivitySprites.sense_high.scale.setTo(0.5,0.5);
+    }
+
     function backToMenu() {
       this.game.state.start('main_menu');
     }
@@ -92,6 +102,8 @@ optionsState.prototype = {
   },
 
   update: function() {
+
+
 
     testBall.body.force.x = ax;
     testBall.body.force.y = ay;

@@ -1,11 +1,9 @@
 function LevelRoundState() {}
 
-var playerLives, playerBall, enemy, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
+var playerLives, playerBall, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
 var playerScale = 0.1;
 var gamePlayed = false;
-var hasRespawnedOnce = false;
-var enemiesLeft = 0;
 
 //accelerometer controls
 
@@ -75,8 +73,6 @@ function createSmallerEnemies() {
         //setting the collision group and having it collide with the player.
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
-
-        enemiesLeft++;
     }
 }
 
@@ -100,8 +96,6 @@ function createLargerEnemies() {
         enemy.body.setCollisionGroup(enemiesCollisionGroup);
         enemy.body.collides([enemiesCollisionGroup, playerCollisionGroup]);
 
-
-        enemiesLeft++;
     }
 }
 
@@ -123,8 +117,6 @@ function accelerateToObject(obj1, obj2, speed) {
 
 function restartGame() {
   game.state.start('level_round');
-  // this.game.state.start('level_round');
-  enemiesLeft = 0;
 }
 
 
@@ -155,9 +147,7 @@ function hitEnemy(playerBall, enemy) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().destroy();
 
-
-                        if (!hasRespawnedOnce) {
-                            hasRespawnedOnce = true;
+                        if (playerLives.countLiving() === 1) {
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
                             var respawnMessageAnimation = game.add.tween(respawnMessage);
@@ -173,15 +163,15 @@ function hitEnemy(playerBall, enemy) {
         }
 
         if (playerLives.countLiving() === 0) {
-            game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
-            if (!gameOverScreen) {
-                gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
+            if (!playerBall.sprite.hasCollided) {
+                playerBall.sprite.hasCollided = true;
+                game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
+                var gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
                 gameOverScreen.scale.setTo(1,1);
                 gameOverScreen.anchor.setTo(0.5,0.5);
                 gameOverScreen.inputEnabled = true;
                 gameOverScreen.events.onInputDown.add(restartGame, this);
-            }
-
+                }
         }
 
       }
@@ -192,7 +182,6 @@ function hitEnemy(playerBall, enemy) {
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
                 enemy.sprite.hasCollided = true;
-                enemiesLeft--;
             }
         }, this);
 
@@ -273,8 +262,6 @@ LevelRoundState.prototype = {
     // This function is called 60 times per second
     // It contains the game's logic
 
-    // document.getElementById("info").innerHTML = enemiesLeft; //used for debugging
-
     //assigning force using the accelerometer
 
     playerBall.body.force.x = ax;
@@ -295,7 +282,7 @@ LevelRoundState.prototype = {
 
     //checking for the game win condition
 
-    if (enemiesLeft === 0) {
+    if (smallerEnemies.countLiving === 0 && largerEnemies.countLiving === 0) {
         var winScreen = game.add.sprite(centerx, centery, 'youwin');
         winScreen.scale.setTo(0.5,0.5);
         winScreen.anchor.setTo(0.5,0.5);
