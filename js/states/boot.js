@@ -3,7 +3,8 @@ windowy = window.innerHeight,
 screenRatio = windowx / windowy,
 centerx = windowx / 2,
 centery = windowy / 2;
-gameOrientated = false;
+
+var gameOrientated = false;
 
 
 function Boot() {}
@@ -33,6 +34,7 @@ Boot.prototype = {
 
         //pause game
         game.paused = true;
+        game.input.pointer1.enabled = false;
 
         document.getElementById('info').style.display = 'block';
         document.getElementById('ballerDiv').style.display = 'none';
@@ -44,7 +46,7 @@ Boot.prototype = {
 
         gameOrientated = true;
 
-        //pause game
+        //resume game
         game.paused = false;
 
         document.getElementById('ballerDiv').style.display = 'block';
