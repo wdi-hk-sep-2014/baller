@@ -2,9 +2,6 @@ function LevelRoundState() {}
 
 var playerLives, playerBall, smallerEnemies, largerEnemies, enemiesCollisionGroup, playerCollisionGroup, gameOverScreen;
 
-//variables for sound
-var playerEatSound, playerDeathSound, playerWinSound;
-
 var playerScale = 0.1;
 var gamePlayed = false;
 var winScreenDisplayed;
@@ -151,8 +148,6 @@ function hitEnemy(playerBall, enemy) {
                         playerBall.sprite.hasCollided = true;
                         playerLives.next().kill();
 
-                        playerDeathSound.play();
-
                         if (playerLives.countDead() === 1) {
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
@@ -172,7 +167,6 @@ function hitEnemy(playerBall, enemy) {
             if (!playerBall.sprite.hasCollided) {
                 playerBall.sprite.hasCollided = true;
                 game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
-                playerDeathSound.play();
                 var gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
                 gameOverScreen.scale.setTo(1,1);
                 gameOverScreen.anchor.setTo(0.5,0.5);
@@ -189,7 +183,6 @@ function hitEnemy(playerBall, enemy) {
             if (!enemy.sprite.hasCollided) {
                 levelUp(playerBall);
                 enemy.sprite.hasCollided = true;
-                playerEatSound.play();
             }
         }, this);
 
@@ -220,14 +213,6 @@ LevelRoundState.prototype = {
 
 
   create: function() {
-
-    //adding some sound effects
-
-    playerEatSound = game.add.audio('eat');
-    playerDeathSound = game.add.audio('death');
-    playerWinSound = game.add.audio('win');
-
-    // playerWinSound depends on win condition which has been changed in previous branch. will note code to be added here:
 
 
     // starting the P2JS system
@@ -307,7 +292,6 @@ LevelRoundState.prototype = {
             var winScreen = game.add.sprite(centerx, centery, 'youwin');
             winScreen.scale.setTo(0.5,0.5);
             winScreen.anchor.setTo(0.5,0.5);
-            playerWinSound.play();
         }
     }
 
