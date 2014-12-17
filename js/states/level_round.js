@@ -7,7 +7,6 @@ var playerEatSound, playerDeathSound, playerWinSound;
 
 var playerScale = 0.1;
 var gamePlayed = false;
-var hasRespawnedOnce;
 var winScreenDisplayed;
 
 //accelerometer controls
@@ -150,12 +149,11 @@ function hitEnemy(playerBall, enemy) {
                 playerBall.sprite.kill();
                     if (!playerBall.sprite.hasCollided) {
                         playerBall.sprite.hasCollided = true;
-                        playerLives.next().destroy();
+                        playerLives.next().kill();
 
                         playerDeathSound.play();
 
-                        if (!hasRespawnedOnce) {
-                            hasRespawnedOnce = true;
+                        if (playerLives.countDead() === 1) {
                             var respawnMessage = game.add.sprite(centerx, centery + 50, 'respawn');
                             respawnMessage.scale.setTo(0.25,0.25);
                             var respawnMessageAnimation = game.add.tween(respawnMessage);
