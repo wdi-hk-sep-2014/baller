@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Consolas';
+  src: 'fonts/Consolas.ttf';
+}
+
+body {
+  font-family: 'Consolas';
+}
+
+#info {
+    font-size: 3.0em;
+    display: none;
+}

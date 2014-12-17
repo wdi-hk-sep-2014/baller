@@ -32,6 +32,7 @@ Boot.prototype = {
         gameOrientated = false;
 
         //pause game
+        game.paused = true;
 
         document.getElementById('info').style.display = 'block';
         document.getElementById('ballerDiv').style.display = 'none';
@@ -44,9 +45,11 @@ Boot.prototype = {
         gameOrientated = true;
 
         //pause game
+        game.paused = false;
 
         document.getElementById('ballerDiv').style.display = 'block';
         document.getElementById('info').style.display = 'none';
+
 
     },
 
@@ -68,7 +71,6 @@ Boot.prototype = {
   },
 
   update: function() {
-
   }
 };
 
