@@ -34,7 +34,6 @@ Boot.prototype = {
 
         //pause game
         game.paused = true;
-        game.input.pointer1.enabled = false;
 
         document.getElementById('info').style.display = 'block';
         document.getElementById('ballerDiv').style.display = 'none';
