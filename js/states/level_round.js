@@ -7,6 +7,8 @@ var playerEatSound, playerDeathSound, playerWinSound;
 
 var playerScale = 0.1;
 var gamePlayed = false;
+var hasRespawnedOnce;
+var winScreenDisplayed;
 
 //accelerometer controls
 
@@ -172,6 +174,7 @@ function hitEnemy(playerBall, enemy) {
             if (!playerBall.sprite.hasCollided) {
                 playerBall.sprite.hasCollided = true;
                 game.add.tween(playerBall.sprite.scale).to({ x: 0, y: 0}, 100, Phaser.Easing.Quadratic.InOut, true, 0);
+                playerDeathSound.play();
                 var gameOverScreen = game.add.sprite(centerx, centery, 'gameogre');
                 gameOverScreen.scale.setTo(1,1);
                 gameOverScreen.anchor.setTo(0.5,0.5);
@@ -191,6 +194,8 @@ function hitEnemy(playerBall, enemy) {
                 playerEatSound.play();
             }
         }, this);
+
+
 
     }
 
@@ -225,8 +230,6 @@ LevelRoundState.prototype = {
     playerWinSound = game.add.audio('win');
 
     // playerWinSound depends on win condition which has been changed in previous branch. will note code to be added here:
-
-    //playerWinSound.play();
 
 
     // starting the P2JS system
@@ -298,12 +301,18 @@ LevelRoundState.prototype = {
     if (cursors.up.isDown){playerBall.body.thrust(inputSensitivity * 2);}
     else if (cursors.down.isDown){playerBall.body.reverse(inputSensitivity * 2);}
 
-    //checking for the game win condition
+        //checking for the game win condition
 
-    if (smallerEnemies.countLiving === 0 && largerEnemies.countLiving === 0) {
-        var winScreen = game.add.sprite(centerx, centery, 'youwin');
-        winScreen.scale.setTo(0.5,0.5);
-        winScreen.anchor.setTo(0.5,0.5);
+    if (smallerEnemies.countLiving() === 0 && largerEnemies.countLiving() === 0) {
+        if (!winScreenDisplayed) {
+            winScreenDisplayed = true;
+            var winScreen = game.add.sprite(centerx, centery, 'youwin');
+            winScreen.scale.setTo(0.5,0.5);
+            winScreen.anchor.setTo(0.5,0.5);
+            playerWinSound.play();
+        }
     }
+
+
   }
 };

@@ -54,7 +54,6 @@ function loadComplete() {
 
     isGameLoaded = true;
 
-
     //logo and start button to be faded in after 1 second
 
     game.time.events.add(1000, (function() {
