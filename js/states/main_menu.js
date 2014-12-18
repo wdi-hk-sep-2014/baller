@@ -10,7 +10,7 @@ MainMenuState.prototype = {
 
     var mainMenuSplash = game.add.sprite(centerx, oneThirdHeight, 'ballerlogo');
     mainMenuSplash.anchor.setTo(0.5,0.5);
-    mainMenuSplash.scale.setTo(0.4,0.4);
+    mainMenuSplash.scale.setTo(0.6,0.6);
 
     // assigning relative mainMenuSplash position to a variable for easy access
 

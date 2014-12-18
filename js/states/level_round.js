@@ -234,8 +234,9 @@ LevelRoundState.prototype = {
     smallerEnemies = game.add.group();
     largerEnemies = game.add.group();
 
-    //setting initial playerscale
+    //setting initial playerscale and winScreenDisplayed
 
+    winScreenDisplayed = false;
     playerScale = 0.1;
 
     createPlayer();
