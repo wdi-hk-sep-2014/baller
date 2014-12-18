@@ -103,10 +103,9 @@ optionsState.prototype = {
 
   update: function() {
 
+    testBall.body.force.x = deviceMultiplier * ax;
+    testBall.body.force.y = -1 * deviceMultiplier * ay;
 
-
-    testBall.body.force.x = ax;
-    testBall.body.force.y = ay;
 
     if (cursors.left.isDown) {testBall.body.rotateLeft(inputSensitivity / 3);}   //testBall movement
     else if (cursors.right.isDown){testBall.body.rotateRight(inputSensitivity / 3);}

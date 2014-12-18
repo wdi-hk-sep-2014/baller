@@ -12,8 +12,9 @@ var ax = 0, ay = 0,
 vx = 0, vy = 0;
 
 window.ondevicemotion = function(e) {
+
   ax = e.accelerationIncludingGravity.x * inputSensitivity; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -inputSensitivity; //acceleration along y axis
+  ay = e.accelerationIncludingGravity.y * inputSensitivity; //acceleration along y axis
 
   //TODO: make tilt increase logarithimacally
 
@@ -269,8 +270,8 @@ LevelRoundState.prototype = {
 
     //assigning force using the accelerometer
 
-    playerBall.body.force.x = ax;
-    playerBall.body.force.y = ay;
+    playerBall.body.force.x = deviceMultiplier * ax;
+    playerBall.body.force.y = -1 * deviceMultiplier * ay;
 
     //larger enemies move faster towards you.
 
