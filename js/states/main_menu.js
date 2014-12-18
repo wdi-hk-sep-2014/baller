@@ -31,7 +31,7 @@ MainMenuState.prototype = {
       function(option) {
         var sprite = game.add.sprite(logoPositionX, logoPositionY + option.yOffset, option.name);
         sprite.anchor.setTo(0.5, 0.5);
-        sprite.scale.setTo(0.3);
+        sprite.scale.setTo(0.4);
         sprite.alpha = 0;
         sprite.inputEnabled = true;
         game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true);
