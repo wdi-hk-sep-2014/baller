@@ -5,6 +5,7 @@ centerx = windowx / 2,
 centery = windowy / 2;
 
 var gameOrientated = false;
+var deviceMultiplier; //this compensates for differences in reported accelerometer values across iOS and android
 
 
 function Boot() {}
@@ -25,6 +26,8 @@ Boot.prototype = {
     game.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
 
     }
+
+    deviceMultiplier = game.device.android ? -1 : 1;
 
   },
 

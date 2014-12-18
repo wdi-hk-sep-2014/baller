@@ -270,15 +270,8 @@ LevelRoundState.prototype = {
 
     //assigning force using the accelerometer
 
-    if (game.device.android) {
-        playerBall.body.force.x = -ax;
-        playerBall.body.force.y = ay;
-    }
-
-    else {
-        playerBall.body.force.x = ax;
-        playerBall.body.force.y = -ay;
-    }
+    playerBall.body.force.x = deviceMultiplier * ax;
+    playerBall.body.force.y = -1 * deviceMultiplier * ay;
 
     //larger enemies move faster towards you.
 
