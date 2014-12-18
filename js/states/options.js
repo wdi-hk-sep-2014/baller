@@ -103,10 +103,15 @@ optionsState.prototype = {
 
   update: function() {
 
+    if (game.device.android) {
+        testBall.body.force.x = -ax;
+        testBall.body.force.y = ay;
+    }
 
-
-    testBall.body.force.x = ax;
-    testBall.body.force.y = ay;
+    else {
+        testBall.body.force.x = ax;
+        testBall.body.force.y = -ay;
+    }
 
     if (cursors.left.isDown) {testBall.body.rotateLeft(inputSensitivity / 3);}   //testBall movement
     else if (cursors.right.isDown){testBall.body.rotateRight(inputSensitivity / 3);}

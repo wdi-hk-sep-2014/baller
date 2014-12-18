@@ -12,8 +12,9 @@ var ax = 0, ay = 0,
 vx = 0, vy = 0;
 
 window.ondevicemotion = function(e) {
+
   ax = e.accelerationIncludingGravity.x * inputSensitivity; //acceleration along x axis
-  ay = e.accelerationIncludingGravity.y * -inputSensitivity; //acceleration along y axis
+  ay = e.accelerationIncludingGravity.y * inputSensitivity; //acceleration along y axis
 
   //TODO: make tilt increase logarithimacally
 
@@ -269,8 +270,15 @@ LevelRoundState.prototype = {
 
     //assigning force using the accelerometer
 
-    playerBall.body.force.x = ax;
-    playerBall.body.force.y = ay;
+    if (game.device.android) {
+        playerBall.body.force.x = -ax;
+        playerBall.body.force.y = ay;
+    }
+
+    else {
+        playerBall.body.force.x = ax;
+        playerBall.body.force.y = -ay;
+    }
 
     //larger enemies move faster towards you.
 
