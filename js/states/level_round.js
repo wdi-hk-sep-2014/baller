@@ -199,7 +199,7 @@ function createLives() {
         var lifeIcons = playerLives.create(firstLifeIconX - (60 * i), 50, 'player');
         lifeIcons.scale.setTo(0.1,0.1);
         lifeIcons.anchor.setTo(0.5, 0.5);
-        lifeIcons.alpha = 0.8;
+        lifeIcons.alpha = 0.6;
     }
 
 }
@@ -234,8 +234,9 @@ LevelRoundState.prototype = {
     smallerEnemies = game.add.group();
     largerEnemies = game.add.group();
 
-    //setting initial playerscale
+    //setting initial playerscale and winScreenDisplayed
 
+    winScreenDisplayed = false;
     playerScale = 0.1;
 
     createPlayer();

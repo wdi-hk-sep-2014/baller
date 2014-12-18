@@ -47,7 +47,7 @@ optionsState.prototype = {
       function(option){
         var sprite = game.add.sprite(optionsTitle.position.x, optionsTitle.position.y + option.yOffset, option.name);
         sprite.anchor.setTo(0.5, 0.5);
-        sprite.scale.setTo(0.3);
+        sprite.scale.setTo(0.4);
         sprite.alpha = 0;
         sprite.inputEnabled = true;
         game.add.tween(sprite).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000 );
@@ -60,21 +60,21 @@ optionsState.prototype = {
     function highSensitivity() {
       inputSensitivity = 500;
       game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
       return;
     }
     function mediumSensitivity() {
       inputSensitivity = 400;
-      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
       return;
     }
     function lowSensitivity() {
       inputSensitivity = 300;
-      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.3, y: 0.3}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
+      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
       game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
       return;
     }

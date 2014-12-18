@@ -52,13 +52,13 @@ function loadComplete() {
 
         this.logo = game.add.sprite(centerx, centery - 50, 'ballerlogo');
         this.logo.anchor.setTo(0.5,0.5);
-        this.logo.scale.setTo(0.55,0.55);
+        this.logo.scale.setTo(0.8,0.8);
         this.logo.alpha = 0;
         game.add.tween(this.logo).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000);
 
-        this.startgame = game.add.sprite(centerx, centery + 250, 'startbutton');
+        this.startgame = game.add.sprite(centerx, centery + 200, 'startbutton');
         this.startgame.anchor.setTo(0.5,0.5);
-        this.startgame.scale.setTo(0.65,0.65);
+        this.startgame.scale.setTo(0.5,0.5);
         this.startgame.alpha = 0;
         game.add.tween(this.startgame).to({alpha: 1}, 1000, Phaser.Easing.Quadratic.InOut, true, 1000).onComplete.add(function(){
             this.isGameLoaded = true;
@@ -104,7 +104,7 @@ Preload.prototype = {
     if ((game.input.mousePointer.isDown || game.input.pointer1.isDown) && this.isGameLoaded) {
         this.logo_animation.to({ x: centerx, y: oneThirdHeight }, 1000, Phaser.Easing.Quadratic.InOut, true);
         this.startgame.destroy();
-        this.logo_scale.to({x: 0.4, y: 0.4}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function() {
+        this.logo_scale.to({x: 0.6, y: 0.6}, 1000, Phaser.Easing.Quadratic.InOut, true).onComplete.add(function() {
         this.game.state.start('main_menu');
     }, this);
 
