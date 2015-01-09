@@ -268,25 +268,14 @@ LevelRoundState.prototype = {
     // This function is called 60 times per second
     // It contains the game's logic
 
-    //assigning force using the accelerometer
-
-    playerBall.body.force.x = deviceMultiplier * ax;
-    playerBall.body.force.y = -1 * deviceMultiplier * ay;
+    ballMovement(playerBall, ax, ay, inputSensitivity, cursors);
 
     //larger enemies move faster towards you.
 
     largerEnemies.forEachAlive(moveLargerTowardPlayer, this);
     smallerEnemies.forEachAlive(moveSmallerTowardPlayer, this);
 
-    //keyboard movement
-
-    if (cursors.left.isDown) {playerBall.body.rotateLeft(inputSensitivity / 3);}   //playerBall movement
-    else if (cursors.right.isDown){playerBall.body.rotateRight(inputSensitivity / 3);}
-    else {playerBall.body.setZeroRotation();}
-    if (cursors.up.isDown){playerBall.body.thrust(inputSensitivity * 2);}
-    else if (cursors.down.isDown){playerBall.body.reverse(inputSensitivity * 2);}
-
-        //checking for the game win condition
+    //checking for the game win condition
 
     if (smallerEnemies.countLiving() === 0 && largerEnemies.countLiving() === 0) {
         if (!winScreenDisplayed) {

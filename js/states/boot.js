@@ -7,6 +7,15 @@ centery = windowy / 2;
 var gameOrientated = false;
 var deviceMultiplier; //this compensates for differences in reported accelerometer values across iOS and android
 
+var SENSITIVITIES = {
+  'sense_high': 500,
+  'sense_medium': 400,
+  'sense_low': 300
+};
+
+var cursors;
+
+var inputSensitivity = SENSITIVITIES['sense_medium'];
 
 function Boot() {}
 
