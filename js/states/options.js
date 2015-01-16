@@ -1,28 +1,30 @@
 function optionsState() {}
 
-var optionsTitle, testBall, testCollisionGroup, backButton;
-var inputSensitivity = 400;
+function createCollisionGroupAndUpdatePhysics() {
+  game.physics.startSystem(Phaser.Physics.P2JS);
+  game.physics.p2.setImpactEvents(true);
+  game.physics.p2.restitution = 0.95;
+  var collisionGroup = game.physics.p2.createCollisionGroup();
+  game.physics.p2.updateBoundsCollisionGroup();
+  return collisionGroup;
+}
 
-function sensitivityTest() {
-  testBall = game.add.sprite(50, 50, 'player');
-  testBall.scale.setTo(playerScale, playerScale);
-  game.physics.p2.enable(testBall);
-  testBall.body.setCollisionGroup(testCollisionGroup);
+function createTestBall(collisionGroup) {
+  var ball = game.add.sprite(50, 50, 'player');
+  ball.scale.setTo(playerScale, playerScale);
+  game.physics.p2.enable(ball);
+  ball.body.setCollisionGroup(collisionGroup);
+  return ball;
 }
 
 optionsState.prototype = {
   create: function() {
-    game.physics.startSystem(Phaser.Physics.P2JS);
-    game.physics.p2.setImpactEvents(true);
-    game.physics.p2.restitution = 0.95;
-    testCollisionGroup = game.physics.p2.createCollisionGroup();
-    game.physics.p2.updateBoundsCollisionGroup();
-
-    sensitivityTest();
+   var testCollisionGroup = createCollisionGroupAndUpdatePhysics();
+    this.testBall = createTestBall(testCollisionGroup);
 
     // this could be a prefab
 
-    backButton = game.add.sprite(100, game.height - 100, 'back_button');
+    var backButton = game.add.sprite(100, game.height - 100, 'back_button');
     backButton.anchor.setTo(0.5,0.5);
     backButton.scale.setTo(0.2,0.2);
     backButton.alpha = 0;
@@ -55,43 +57,28 @@ optionsState.prototype = {
     });
 
 
-    // have some rotten code here. Will refactor.
+    // set sprite scale according to current sensitivity
 
-    function highSensitivity() {
-      inputSensitivity = 500;
-      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      return;
-    }
-    function mediumSensitivity() {
-      inputSensitivity = 400;
-      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      return;
-    }
-    function lowSensitivity() {
-      inputSensitivity = 300;
-      game.add.tween(sensitivitySprites.sense_high.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_medium.scale).to({x: 0.4, y: 0.4}, 500, Phaser.Easing.Quadratic.InOut, true);
-      game.add.tween(sensitivitySprites.sense_low.scale).to({x: 0.5, y: 0.5}, 500, Phaser.Easing.Quadratic.InOut, true);
-      return;
+      function selectSensitivity(selectedSprite) {
+      inputSensitivity = SENSITIVITIES[selectedSprite];
+      ['sense_high', 'sense_medium', 'sense_low'].forEach(function(spriteName) {
+        var targetScale = (selectedSprite === spriteName) ? 0.5 : 0.3;
+        game.add.tween(sensitivitySprites[spriteName].scale).to({x: targetScale, y: targetScale}, 500, Phaser.Easing.Quadratic.InOut, true);
+      });
     }
 
-    sensitivitySprites.sense_high.events.onInputDown.add(highSensitivity, this);
-    sensitivitySprites.sense_medium.events.onInputDown.add(mediumSensitivity, this);
-    sensitivitySprites.sense_low.events.onInputDown.add(lowSensitivity, this);
 
-    if (inputSensitivity === 300) {
-        sensitivitySprites.sense_low.scale.setTo(0.5,0.5);
-    }
-    else if (inputSensitivity === 400) {
-        sensitivitySprites.sense_medium.scale.setTo(0.5,0.5);
-    }
-    else {
-        sensitivitySprites.sense_high.scale.setTo(0.5,0.5);
-    }
+      ['sense_high', 'sense_medium', 'sense_low'].forEach(function(sensitivityOption) {
+
+      // make sure the current sensitivity is reflected in the options when screen loads
+      if (inputSensitivity === SENSITIVITIES[sensitivityOption]) {
+        selectSensitivity(sensitivityOption);
+      }
+      // in terms of compute cycle, the arrays are iterated through twice. perhaps could be refactored more.
+
+      sensitivitySprites[sensitivityOption].events.onInputDown.add(selectSensitivity.bind(this, sensitivityOption), this);
+
+    });
 
     function backToMenu() {
       this.game.state.start('main_menu');
@@ -103,15 +90,8 @@ optionsState.prototype = {
 
   update: function() {
 
-    testBall.body.force.x = deviceMultiplier * ax;
-    testBall.body.force.y = -1 * deviceMultiplier * ay;
+  ballMovement(this.testBall, ax, ay, inputSensitivity, cursors);
 
-
-    if (cursors.left.isDown) {testBall.body.rotateLeft(inputSensitivity / 3);}   //testBall movement
-    else if (cursors.right.isDown){testBall.body.rotateRight(inputSensitivity / 3);}
-    else {testBall.body.setZeroRotation();}
-    if (cursors.up.isDown){testBall.body.thrust(inputSensitivity * 2);}
-    else if (cursors.down.isDown){testBall.body.reverse(inputSensitivity * 2);}
   }
 };
 
